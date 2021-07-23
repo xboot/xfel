@@ -25,16 +25,17 @@ struct spinor_pdata_t {
 };
 
 enum {
-	OPCODE_SFDP			= 0x5a,
-	OPCODE_RDID			= 0x9f,
-	OPCODE_WRSR			= 0x01,
-	OPCODE_RDSR			= 0x05,
-	OPCODE_WREN			= 0x06,
-	OPCODE_READ			= 0x03,
-	OPCODE_PROG			= 0x02,
-	OPCODE_E4K			= 0x20,
-	OPCODE_E32K			= 0x52,
-	OPCODE_E64K			= 0xd8,
+	OPCODE_SFDP    		= 0x5a,
+	OPCODE_RDID    		= 0x9f,
+	OPCODE_WRSR    		= 0x01,
+	OPCODE_RDSR    		= 0x05,
+	OPCODE_WREN    		= 0x06,
+	OPCODE_READ_NAND  = 0x13,
+	OPCODE_READ		  	= 0x03,
+	OPCODE_PROG	  		= 0x02,
+	OPCODE_E4K  			= 0x20,
+	OPCODE_E32K		  	= 0x52,
+	OPCODE_E64K	  		= 0xd8,
 	OPCODE_ENTER_4B		= 0xb7,
 	OPCODE_EXIT_4B		= 0xe9,
 };
@@ -69,8 +70,17 @@ struct sfdp_t {
 	struct sfdp_basic_table_t bt;
 };
 
+// MX35LF2GE4AD 0xffc226
+// https://www.mxic.com.tw/en-us/products/NAND-Flash/Serial-NAND-Flash/Pages/spec.aspx?p=MX35LF2GE4AD&m=Serial+NAND&n=PM2794
+// C2: Macronix manufacturer ID
+// 26: 2Gb variant, device ID 1
+// 37: 4Gb variant, device ID 1
+// 03: should be device ID 2
+// read ID command: 9F
+//
 static const struct spinor_info_t spinor_infos[] = {
 	{ "w25x40", 0xef3013, 512 * 1024, 4096, 1, 256, 3, OPCODE_READ, OPCODE_PROG, OPCODE_WREN, OPCODE_E4K, 0, OPCODE_E64K, 0 },
+	{ "mx35lf2", 0xffc226, 256 * 1024 * 1024, 64 * 1024, 1, 256, 3, OPCODE_READ_NAND, OPCODE_PROG, OPCODE_WREN, OPCODE_E4K, 0, OPCODE_E64K, 0 },
 };
 
 static inline int spinor_read_sfdp(struct xfel_ctx_t * ctx, uint32_t swapbuf, uint32_t swaplen, uint32_t cmdlen, struct sfdp_t * sfdp)
