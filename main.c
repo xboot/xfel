@@ -107,8 +107,7 @@ int main(int argc, char * argv[])
 {
 	struct xfel_ctx_t ctx;
 
-	if (argc < 2 || (argc == 2 && 
-		(strcmp(argv[1], "-h") == 0 || strcmp(argv[1], "--help") == 0)))
+	if((argc < 2) || ((argc == 2) && (!strcmp(argv[1], "-h") || !strcmp(argv[1], "--help"))))
 	{
 		usage();
 		return -1;
