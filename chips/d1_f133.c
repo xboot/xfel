@@ -3084,6 +3084,29 @@ static int chip_spi_run(struct xfel_ctx_t * ctx, uint8_t * cbuf, uint32_t clen)
 	return 1;
 }
 
+#include "../payloads/d1_f133/sd/payload.inc"
+static int chip_sd_init(struct xfel_ctx_t * ctx, uint32_t * swapbuf, uint32_t * swaplen, uint32_t * cmdlen)
+{
+	fel_write(ctx, 0x00020000, (void *)&output_sd_bin[0], sizeof(output_sd_bin));
+	if(swapbuf)
+		*swapbuf = 0x00023E00;
+	if(swaplen)
+		*swaplen = 512;
+	if(cmdlen)
+		*cmdlen = 512;
+	return 1;
+}
+
+static int chip_sd_run(struct xfel_ctx_t * ctx, uint8_t * cbuf, uint32_t clen)
+{
+	// printf("func=%s L=%d\r\n", __FUNCTION__, __LINE__);
+
+	fel_write(ctx, 0x00023C00, (void *)cbuf, clen);
+	fel_exec(ctx, 0x00020000);
+
+	return 1;
+}
+
 struct chip_t d1_f133 = {
 	.name = "D1/F133",
 	.detect = chip_detect,
@@ -3093,4 +3116,6 @@ struct chip_t d1_f133 = {
 	.ddr = chip_ddr,
 	.spi_init = chip_spi_init,
 	.spi_run = chip_spi_run,
+	.sd_init = chip_sd_init,
+	.sd_run  = chip_sd_run,
 };
