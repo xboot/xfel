@@ -420,3 +420,21 @@ int fel_spi_xfer(struct xfel_ctx_t * ctx, uint32_t swapbuf, uint32_t swaplen, ui
 	}
 	return 1;
 }
+
+int fel_sd_init(struct xfel_ctx_t * ctx, uint32_t * swapbuf, uint32_t * swaplen, uint32_t * cmdlen)
+{
+	uint8_t cbuf[2];
+	uint32_t clen = 0;
+
+	if(!fel_chip_sd_init(ctx, swapbuf, swaplen, cmdlen))
+		return 0;
+
+	cbuf[clen++] = SD_CMD_INIT;
+	cbuf[clen++] = SD_CMD_END;
+	if(!fel_chip_sd_run(ctx, cbuf, sizeof(cbuf)))
+	{
+		return 0;
+	}
+
+	return 1;
+}

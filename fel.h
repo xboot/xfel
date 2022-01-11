@@ -37,6 +37,8 @@ struct chip_t {
 	int (*ddr)(struct xfel_ctx_t * ctx, const char * type);
 	int (*spi_init)(struct xfel_ctx_t * ctx, uint32_t * swapbuf, uint32_t * swaplen, uint32_t * cmdlen);
 	int (*spi_run)(struct xfel_ctx_t * ctx, uint8_t * cbuf, uint32_t clen);
+	int (*sd_init)(struct xfel_ctx_t * ctx, uint32_t * swapbuf, uint32_t * swaplen, uint32_t * cmdlen);
+	int (*sd_run)(struct xfel_ctx_t * ctx, uint8_t * cbuf, uint32_t clen);
 };
 
 enum {
@@ -49,6 +51,14 @@ enum {
 	SPI_CMD_RXBUF			= 0x06,
 	SPI_CMD_SPINOR_WAIT		= 0x07,
 	SPI_CMD_SPINAND_WAIT	= 0x08,
+};
+
+enum {
+	SD_CMD_END				= 0x00, // none
+	SD_CMD_INIT				= 0x01, // none
+	SD_CMD_INFO				= 0x02, // u32:buf, ret_buf=u64:cap
+	SD_CMD_READ				= 0x03, // u64:sd-addr, u32:buf. ret_buf=[len]
+	SD_CMD_WRITE			= 0x04, // u64:sd-addr, u32:buf. dat_buf=[len]
 };
 
 /*
@@ -94,6 +104,18 @@ static inline int fel_chip_spi_run(struct xfel_ctx_t * ctx, uint8_t * cbuf, uint
 	return ctx->chip->spi_run(ctx, cbuf, clen);
 }
 
+static inline int fel_chip_sd_init(struct xfel_ctx_t * ctx, uint32_t * swapbuf, uint32_t * swaplen, uint32_t * cmdlen)
+{
+	if(!ctx->chip->sd_init) return 0;
+	return ctx->chip->sd_init(ctx, swapbuf, swaplen, cmdlen);
+}
+
+static inline int fel_chip_sd_run(struct xfel_ctx_t * ctx, uint8_t * cbuf, uint32_t clen)
+{
+	if(!ctx->chip->sd_run) return 0;
+	return ctx->chip->sd_run(ctx, cbuf, clen);
+}
+
 int fel_init(struct xfel_ctx_t * ctx);
 void fel_exec(struct xfel_ctx_t * ctx, uint32_t addr);
 uint32_t fel_read32(struct xfel_ctx_t * ctx, uint32_t addr);
@@ -104,6 +126,7 @@ void fel_read_progress(struct xfel_ctx_t * ctx, uint32_t addr, void * buf, size_
 void fel_write_progress(struct xfel_ctx_t * ctx, uint32_t addr, void * buf, size_t len);
 int fel_spi_init(struct xfel_ctx_t * ctx, uint32_t * swapbuf, uint32_t * swaplen, uint32_t * cmdlen);
 int fel_spi_xfer(struct xfel_ctx_t * ctx, uint32_t swapbuf, uint32_t swaplen, uint32_t cmdlen, void * txbuf, uint32_t txlen, void * rxbuf, uint32_t rxlen);
+int fel_sd_init(struct xfel_ctx_t * ctx, uint32_t * swapbuf, uint32_t * swaplen, uint32_t * cmdlen);
 
 #ifdef __cplusplus
 }

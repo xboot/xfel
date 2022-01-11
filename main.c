@@ -1,6 +1,7 @@
 #include <fel.h>
 #include <spinor.h>
 #include <spinand.h>
+#include <sd.h>
 
 static uint64_t file_save(const char * filename, void * buf, uint64_t len)
 {
@@ -104,6 +105,9 @@ static void usage(void)
 	printf("    xfel spinand read <address> <length> <file>         - Read spi nand flash to file\r\n");
 	printf("    xfel spinand write <address> <file>                 - Write file to spi nand flash\r\n");
 	printf("    xfel spinand splwrite <split-size> <address> <file> - Write file to spi nand flash with split support\r\n");
+	printf("    xfel sd                                             - Detect sd card\r\n");
+	printf("    xfel sd read <address> <length> <file>              - Read sd card to file\r\n");
+	printf("    xfel sd write <address> <file>                      - Write file to sd card\r\n");
 }
 
 int main(int argc, char * argv[])
@@ -412,8 +416,59 @@ int main(int argc, char * argv[])
 				usage();
 		}
 	}
+	else if(!strcmp(argv[1], "sd"))
+	{
+		argc -= 2;
+		argv += 2;
+		if(argc == 0)
+		{
+			char name[128];
+			uint64_t capacity;
+
+			if(sd_detect(&ctx, name, &capacity))
+				printf("Found SD card '%s' with %lld bytes\r\n", name, (long long)capacity);
+			else
+				printf("Can't detect any sd card\r\n");
+		}
+		else
+		{
+			if(!strcmp(argv[0], "read") && (argc == 4))
+			{
+				argc -= 1;
+				argv += 1;
+				uint64_t addr = strtoull(argv[0], NULL, 0);
+				uint64_t len = strtoull(argv[1], NULL, 0);
+				char * buf = malloc(len);
+				if(buf)
+				{
+					if(sd_read(&ctx, addr, buf, len))
+						file_save(argv[2], buf, len);
+					else
+						printf("Can't read sd card\r\n");
+					free(buf);
+				}
+			}
+			else if(!strcmp(argv[0], "write") && (argc == 3))
+			{
+				argc -= 1;
+				argv += 1;
+				uint64_t addr = strtoull(argv[0], NULL, 0);
+				uint64_t len;
+				void * buf = file_load(argv[1], &len);
+				if(buf)
+				{
+					if(!sd_write(&ctx, addr, buf, len))
+						printf("Can't write sd card\r\n");
+					free(buf);
+				}
+			}
+			else
+				usage();
+		}
+	}
 	else
 		usage();
+
 	if(ctx.hdl)
 		libusb_close(ctx.hdl);
 	libusb_exit(NULL);
