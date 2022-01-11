@@ -6,7 +6,7 @@ STACK_SIZE = 0x400;
 
 MEMORY
 {
-	ram : org = 0x00020000, len = 0x00001000	/* 4 KB */
+	ram : org = 0x00020000, len = 0x00003C00	/* 15 KB */
 }
 
 SECTIONS
@@ -16,7 +16,7 @@ SECTIONS
 		PROVIDE(__image_start = .);
 		PROVIDE(__text_start = .);
 		.obj/source/start.o (.text*)
-		.obj/source/sys-spi.o (.text*)
+		.obj/source/fel-sd.o (.text*)
 		*(.text*)
 		*(.iplt)
 		*(.note.gnu.build-id)

@@ -44,7 +44,8 @@ reset:
 	sd ra, 24(sp)
 	mv s0, a0
 
-	li a0, 0x00021000
+	jal sys_uart_init
+	li a0, 0x00023C00
 	jal sys_spi_run
 
 	ld ra, 24(sp)
