@@ -57,8 +57,8 @@ enum {
 	SD_CMD_END				= 0x00, // none
 	SD_CMD_INIT				= 0x01, // none
 	SD_CMD_INFO				= 0x02, // u32:buf, ret_buf=u64:cap
-	SD_CMD_READ				= 0x03, // u64:sd-addr, u32:buf. ret_buf=[len]
-	SD_CMD_WRITE			= 0x04, // u64:sd-addr, u32:buf. dat_buf=[len]
+	SD_CMD_READ				= 0x03, // u64:sd-addr, u32:buf, u32:len. ret_buf=[len]
+	SD_CMD_WRITE			= 0x04, // u64:sd-addr, u32:buf, u32:len. dat_buf=[len]
 };
 
 /*

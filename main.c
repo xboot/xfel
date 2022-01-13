@@ -438,6 +438,8 @@ int main(int argc, char * argv[])
 				argv += 1;
 				uint64_t addr = strtoull(argv[0], NULL, 0);
 				uint64_t len = strtoull(argv[1], NULL, 0);
+				len = (len + 8192 - 1) & (~0x1FFFULL); // align up to 8KB.
+				// printf("read  %lld bytes\r\n", (long long)len);
 				char * buf = malloc(len);
 				if(buf)
 				{
@@ -455,6 +457,8 @@ int main(int argc, char * argv[])
 				uint64_t addr = strtoull(argv[0], NULL, 0);
 				uint64_t len;
 				void * buf = file_load(argv[1], &len);
+				len &= (~0x1FFFULL); // align down to 8KB.
+				// printf("write  %lld bytes\r\n", (long long)len);
 				if(buf)
 				{
 					if(!sd_write(&ctx, addr, buf, len))

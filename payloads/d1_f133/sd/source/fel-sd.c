@@ -32,21 +32,21 @@ enum {
 	SD_CMD_END				= 0x00, // none
 	SD_CMD_INIT				= 0x01, // none
 	SD_CMD_INFO				= 0x02, // u32:buf. ret_buf=u64:cap
-	SD_CMD_READ				= 0x03, // u64:sd-addr, u32:buf. ret_buf=512
-	SD_CMD_WRITE			= 0x04, // u64:sd-addr, u32:buf. dat_buf=512
+	SD_CMD_READ				= 0x03, // u64:sd-addr, u32:buf, u32:len. ret_buf=512
+	SD_CMD_WRITE			= 0x04, // u64:sd-addr, u32:buf, u32:len. dat_buf=512
 };
 
 extern void sys_uart_done(void);
 extern int sys_uart_printf(const char * fmt, ...);
 
 extern uint64_t sys_sd_init(void);
-extern void sdio_read_sector(uint32_t addr_sec, uint8_t *buf);
-extern uint32_t sdio_write_sector(uint32_t addr_sec, uint8_t *buf);
+extern void sdio_read_sector(uint32_t addr_byte, uint32_t len, uint8_t *buf);
+extern uint32_t sdio_write_sector(uint32_t addr_byte, uint32_t len, uint8_t *buf);
 
 void sys_spi_run(void * cbuf)
 {
 	u8_t c, *p = cbuf;
-	u32_t addr;
+	u32_t addr, len; // swap buf len.
 	u64_t addr64;
 
 	// sys_uart_printf("\r\nsys sd run: 0x%x\r\n", cbuf);
@@ -85,11 +85,13 @@ void sys_spi_run(void * cbuf)
 			p += 8;
 			memcpy(&addr, p, 4);
 			p += 4;
+			memcpy(&len, p, 4);
+			p += 4;
 
-			// sys_uart_printf("sd addr=0x%x\r\n", (void *)addr64);
+			// sys_uart_printf("sd addr=0x%x, len=%d\r\n", (void *)addr64, len);
 			// sys_uart_printf("resp addr=%d\r\n", addr);
 
-			sdio_read_sector(addr64/512, (uint8_t *)((uint64_t)addr));
+			sdio_read_sector(addr64, len, (uint8_t *)((uint64_t)addr));
 		}
 		else if(c == SD_CMD_WRITE)
 		{
@@ -99,11 +101,13 @@ void sys_spi_run(void * cbuf)
 			p += 8;
 			memcpy(&addr, p, 4);
 			p += 4;
+			memcpy(&len, p, 4);
+			p += 4;
 
-			// sys_uart_printf("sd addr=0x%x\r\n", (void *)addr64);
+			// sys_uart_printf("sd addr=0x%x, len=%d\r\n", (void *)addr64, len);
 			// sys_uart_printf("resp addr=%d\r\n", addr);
 
-			sdio_write_sector(addr64 / 512, (uint8_t *)((uint64_t)addr));
+			sdio_write_sector(addr64, len, (uint8_t *)((uint64_t)addr));
 		}
 		else
 		{

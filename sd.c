@@ -93,6 +93,11 @@ static void sd_helper_read(struct xfel_ctx_t *ctx, struct sd_pdata_t *pdat, uint
 	cbuf[clen++] = (swapbuf >> 16) & 0xff;
 	cbuf[clen++] = (swapbuf >> 24) & 0xff;
 
+	cbuf[clen++] = (len >> 0) & 0xff;
+	cbuf[clen++] = (len >> 8) & 0xff;
+	cbuf[clen++] = (len >> 16) & 0xff;
+	cbuf[clen++] = (len >> 24) & 0xff;
+
 	cbuf[clen++] = SD_CMD_END;
 	if (!fel_chip_sd_run(ctx, cbuf, clen))
 	{
@@ -134,9 +139,10 @@ int sd_read(struct xfel_ctx_t *ctx, uint64_t addr, void *buf, uint64_t len)
 	if (1)
 	{
 		progress_start(&p, len);
+		progress_update(&p, count);
 		while (len > 0)
 		{
-			n = 512; // sector size
+			n = 8192; // sector size
 			sd_helper_read(ctx, &pdat_sd, addr, buf, n);
 			addr += n;
 			len -= n;
@@ -181,6 +187,11 @@ static void sd_helper_write(struct xfel_ctx_t *ctx, struct sd_pdata_t *pdat, uin
 	cbuf[clen++] = (swapbuf >> 16) & 0xff;
 	cbuf[clen++] = (swapbuf >> 24) & 0xff;
 
+	cbuf[clen++] = (len >> 0) & 0xff;
+	cbuf[clen++] = (len >> 8) & 0xff;
+	cbuf[clen++] = (len >> 16) & 0xff;
+	cbuf[clen++] = (len >> 24) & 0xff;
+
 	cbuf[clen++] = SD_CMD_END;
 
 	fel_write(ctx, pdat->swapbuf, buf, len);
@@ -224,7 +235,7 @@ int sd_write(struct xfel_ctx_t *ctx, uint64_t addr, void *buf, uint64_t len)
 		progress_update(&p, count);
 		while (len > 0)
 		{
-			n = 512; // sector size
+			n = 8192; // sector size
 			sd_helper_write(ctx, &pdat_sd, addr, buf, n);
 			addr += n;
 			len -= n;

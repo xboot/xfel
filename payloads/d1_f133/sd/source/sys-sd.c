@@ -54,8 +54,8 @@ struct tina_mmc
 
 typedef struct tina_mmc *tina_mmc_t;
 volatile tina_mmc_t mmc=(tina_mmc_t)SUNXI_SMHC0_BASE;
-static uint32_t csd_structure;
-static uint32_t sd_rca;
+static volatile uint32_t csd_structure;
+static volatile uint32_t sd_rca;
 
 #define GO_IDLE_STATE         0   /* bc                          */
 #define SEND_OP_COND          1   /* bcr  [31:0] OCR         R3  */
@@ -334,7 +334,7 @@ void read_resp(uint32_t *resp)
 
 void sendcmd(int32_t cmd, int32_t arg, int32_t cmdval)
 {
-    uint32_t timeout = 100;
+    uint32_t timeout = 300;
     uint32_t val;
 
     mmc->cagr_reg = arg;
@@ -350,33 +350,37 @@ void sendcmd(int32_t cmd, int32_t arg, int32_t cmdval)
 
     if (!timeout)
     {
-      // logout("Run cmd failed\r\n");
+        logout("Run cmd failed\r\n");
     }
 
     /* clean interrupt */
     mmc->risr_reg = mmc->risr_reg;
 }
 
-void sdio_read_sector(uint32_t addr_sec, uint8_t *buf)
+void sdio_read_sector(uint32_t addr_byte, uint32_t len, uint8_t *buf)
 {
-    uint32_t timeout;
+    int32_t timeout;
     uint32_t *pdat=(uint32_t *)buf;
+    uint32_t status, count;
+
+
     mmc->bksr_reg = 512;
-    mmc->bycr_reg = 512;
+    mmc->bycr_reg = len;
     mmc->gctl_reg = mmc->gctl_reg | 0x80000000;
     if (csd_structure == 0)
     {
-      mmc->cagr_reg = addr_sec * 512;
+      mmc->cagr_reg = addr_byte;
     }
     else
     {
-      mmc->cagr_reg = addr_sec;
+      mmc->cagr_reg = addr_byte / 512;
     }
 
-    mmc->cmdr_reg = 0x80000000|READ_SINGLE_BLOCK|VAL_CMD_WITH_RESP|VAL_CHK_RESP_CRC|VAL_WITH_DATA_TRANS|VAL_WAIT_PRE_OVER;
+    mmc->risr_reg = (1<<2);//[2] CC
+    mmc->cmdr_reg = 0x80000000|READ_MULTIPLE_BLOCK|VAL_STOP_CMD_FLAG|VAL_CMD_WITH_RESP|VAL_CHK_RESP_CRC|VAL_WITH_DATA_TRANS|VAL_WAIT_PRE_OVER;
 
     timeout = 200000;
-    for (int i = 0; i < 128; i++)
+    for (int i = 0; i < (len/4); i++)
     {
       while ((mmc->star_reg & (1 << 2)) && --timeout);
 
@@ -389,9 +393,16 @@ void sdio_read_sector(uint32_t addr_sec, uint8_t *buf)
       pdat[i] = mmc->fifo_reg;
       timeout = 200000;
     }
+
+    if(status & ((1<<6) | (1<<7)))
+    {
+        logout("crc error, risr=%x, count=%d\r\n", status, count);
+    }
+
+    mmc->risr_reg = 0xffffffff;
 }
 
-void sdio_write_sector(uint32_t addr_sec, uint8_t *buf)
+void sdio_write_sector(uint32_t addr_byte, uint32_t len, uint8_t *buf)
 {
     uint32_t timeout;
     uint32_t *pdat=(uint32_t *)buf;
@@ -399,22 +410,29 @@ void sdio_write_sector(uint32_t addr_sec, uint8_t *buf)
     uint32_t status, count;
 
     mmc->bksr_reg = 512;
-    mmc->bycr_reg = 512;
+    mmc->bycr_reg = len;
     mmc->gctl_reg = mmc->gctl_reg | 0x80000000;
     if (csd_structure == 0)
     {
-      mmc->cagr_reg = addr_sec * 512;
+      mmc->cagr_reg = addr_byte;
     }
     else
     {
-      mmc->cagr_reg = addr_sec;
+      mmc->cagr_reg = addr_byte / 512;
     }
 
     mmc->risr_reg = (1<<2);//[2] CC
-    mmc->cmdr_reg = 0x80000000 | WRITE_BLOCK | VAL_CMD_WITH_RESP | VAL_CHK_RESP_CRC | VAL_WITH_DATA_TRANS | VAL_WAIT_PRE_OVER | VAL_TRANS_DIR_WRITE;
+    if(len == 512)
+    {
+      mmc->cmdr_reg = 0x80000000 | WRITE_BLOCK | VAL_CMD_WITH_RESP | VAL_CHK_RESP_CRC | VAL_WITH_DATA_TRANS | VAL_WAIT_PRE_OVER | VAL_TRANS_DIR_WRITE;
+    }
+    else
+    {
+      mmc->cmdr_reg = 0x80000000 | WRITE_MULTIPLE_BLOCK | VAL_STOP_CMD_FLAG | VAL_CMD_WITH_RESP | VAL_CHK_RESP_CRC | VAL_WITH_DATA_TRANS | VAL_WAIT_PRE_OVER | VAL_TRANS_DIR_WRITE;
+    }
 
-    timeout = 200000;
-    for (int i = 0; i < 128; i++)
+    timeout = 400000;
+    for (int i = 0; i < (len/4); i++)
     {
       while ((mmc->star_reg & (1 << 3)) && --timeout);
 
@@ -425,9 +443,24 @@ void sdio_write_sector(uint32_t addr_sec, uint8_t *buf)
       }
 
       mmc->fifo_reg = pdat[i];
-      timeout = 200000;
+      timeout = 400000;
     }
     //logout("WRITE_BLOCK, star_reg=%x, risr_reg=%x\r\n", count, status);
+
+    count = 0;
+    do
+    {
+        count++;
+        status =  mmc->star_reg;
+
+        if(count > 8000000)
+        {
+            logout("wait FIFO empty timeout!\r\n");
+            // ret = 1;
+            break;
+        }
+    } while (!(status & (1<<2)));
+    // logout("FIFO empty, star_reg=%x, count=%d\r\n", status, count);
 
     count = 0;
     do
@@ -459,11 +492,13 @@ void sdio_write_sector(uint32_t addr_sec, uint8_t *buf)
     } while (!(status & (1 << 3)));
     // logout("DATA done, risr=%x, count=%d\r\n", status, count);
 
+    mmc->risr_reg = 0xffffffff;
+    sdelay(100);
+
     count = 0;
     do
     {
         sendcmd(SEND_STATUS, sd_rca, VAL_CMD_WITH_RESP | VAL_CHK_RESP_CRC); // select card into trans state
-        // sdelay(10000);
 
         read_resp(resp);
         count++;
@@ -582,6 +617,7 @@ uint64_t sys_sd_init(void)
 
     // sdio_config_clk_width(24 * 1000 * 1000, 1);
     mmc->ckcr_reg = ((mmc->ckcr_reg) & 0xFFFFFF00) | (0 << 0);
+    mmc_update_clk();
 
     return (uint64_t)c_size * 1024;
 }
