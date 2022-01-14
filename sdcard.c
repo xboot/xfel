@@ -167,6 +167,7 @@ struct sdcard_pdata_t {
 	uint32_t swapbuf;
 	uint32_t swaplen;
 	uint32_t cmdlen;
+	uint8_t buf[4096];
 };
 
 #define UNSTUFF_BITS(resp, start, size)									\
@@ -194,79 +195,6 @@ static const unsigned char tran_speed_time[] = {
 	 0, 10, 12, 13, 15, 20, 25, 30,
 	35, 40, 45, 50, 55, 60, 70, 80,
 };
-
-static char * sdcard_version_string(struct sdcard_info_t * info)
-{
-	static char version[sizeof("xx.xxx")];
-	unsigned int major, minor, micro;
-	int n;
-
-	major = (info->version >> 8) & 0xf;
-	minor = (info->version >> 4) & 0xf;
-	micro = info->version & 0xf;
-	n = sprintf(version, "%u.%u", major, minor);
-	if(micro)
-		sprintf(version + n, "%u", micro);
-	return version;
-}
-
-static unsigned int extract_mid(struct sdcard_info_t * info)
-{
-	if((info->version & MMC_VERSION_MMC) && (info->version <= MMC_VERSION_1_4))
-		return UNSTUFF_BITS(info->cid, 104, 24);
-	else
-		return UNSTUFF_BITS(info->cid, 120, 8);
-}
-
-static unsigned int extract_oid(struct sdcard_info_t * info)
-{
-	return (info->cid[0] >> 8) & 0xffff;
-}
-
-static unsigned int extract_prv(struct sdcard_info_t * info)
-{
-	return (info->cid[2] >> 24);
-}
-
-static unsigned int extract_psn(struct sdcard_info_t * info)
-{
-	if(info->version & SD_VERSION_SD)
-	{
-		return UNSTUFF_BITS(info->csd, 24, 32);
-	}
-	else
-	{
-		if(info->version > MMC_VERSION_1_4)
-			return UNSTUFF_BITS(info->cid, 16, 32);
-		else
-			return UNSTUFF_BITS(info->cid, 16, 24);
-	}
-}
-
-static unsigned int extract_month(struct sdcard_info_t * info)
-{
-	if(info->version & SD_VERSION_SD)
-		return UNSTUFF_BITS(info->cid, 8, 4);
-	else
-		return UNSTUFF_BITS(info->cid, 12, 4);
-}
-
-static unsigned int extract_year(struct sdcard_info_t * info)
-{
-	unsigned int year;
-
-	if(info->version & SD_VERSION_SD)
-		year = UNSTUFF_BITS(info->cid, 12, 8) + 2000;
-	else if(info->version < MMC_VERSION_4_41)
-		return UNSTUFF_BITS(info->cid, 8, 4) + 1997;
-	else
-	{
-		year = UNSTUFF_BITS(info->cid, 8, 4) + 1997;
-		if(year < 2010)
-			year += 16;
-	}
-	return year;
-}
 
 static int sdhci_reset(struct xfel_ctx_t * ctx)
 {
@@ -496,6 +424,130 @@ static uint64_t mmc_write_blocks(struct xfel_ctx_t * ctx, struct sdcard_pdata_t 
 	return blkcnt;
 }
 
+static uint64_t sdcard_blk_read(struct xfel_ctx_t * ctx, struct sdcard_pdata_t * pdat, uint8_t * buf, uint64_t blkno, uint64_t blkcnt)
+{
+	uint64_t cnt, blks = blkcnt;
+	uint32_t bmax = MIN((uint32_t)127, (pdat->swaplen - 16) / pdat->info.read_bl_len);
+
+	while(blks > 0)
+	{
+		cnt = (blks > bmax) ? bmax : blks;
+		if(mmc_read_blocks(ctx, pdat, buf, blkno, cnt) != cnt)
+			return 0;
+		blks -= cnt;
+		blkno += cnt;
+		buf += cnt * pdat->info.read_bl_len;
+	}
+	return blkcnt;
+}
+
+static uint64_t sdcard_blk_write(struct xfel_ctx_t * ctx, struct sdcard_pdata_t * pdat, uint8_t * buf, uint64_t blkno, uint64_t blkcnt)
+{
+	uint64_t cnt, blks = blkcnt;
+	uint32_t bmax = MIN((uint32_t)127, (pdat->swaplen - 16) / pdat->info.write_bl_len);
+
+	while(blks > 0)
+	{
+		cnt = (blks > bmax) ? bmax : blks;
+		if(mmc_write_blocks(ctx, pdat, buf, blkno, cnt) != cnt)
+			return 0;
+		blks -= cnt;
+		blkno += cnt;
+		buf += cnt * pdat->info.write_bl_len;
+	}
+	return blkcnt;
+}
+
+static uint64_t sdcard_helper_read(struct xfel_ctx_t * ctx, struct sdcard_pdata_t * pdat, uint64_t offset, uint8_t * buf, uint64_t count)
+{
+	uint64_t blksz = pdat->info.read_bl_len;
+	uint64_t blkno, len, tmp;
+	uint64_t ret = 0;
+
+	blkno = offset / blksz;
+	tmp = offset % blksz;
+	if(tmp > 0)
+	{
+		len = blksz - tmp;
+		if(count < len)
+			len = count;
+		if(sdcard_blk_read(ctx, pdat, &pdat->buf[0], blkno, 1) != 1)
+			return ret;
+		memcpy((void *)buf, (const void *)(&pdat->buf[tmp]), len);
+		buf += len;
+		count -= len;
+		ret += len;
+		blkno += 1;
+	}
+	tmp = count / blksz;
+	if(tmp > 0)
+	{
+		len = tmp * blksz;
+		if(sdcard_blk_read(ctx, pdat, buf, blkno, tmp) != tmp)
+			return ret;
+		buf += len;
+		count -= len;
+		ret += len;
+		blkno += tmp;
+	}
+	if(count > 0)
+	{
+		len = count;
+		if(sdcard_blk_read(ctx, pdat, &pdat->buf[0], blkno, 1) != 1)
+			return ret;
+		memcpy((void *)buf, (const void *)(&pdat->buf[0]), len);
+		ret += len;
+	}
+	return ret;
+}
+
+static uint64_t sdcard_helper_write(struct xfel_ctx_t * ctx, struct sdcard_pdata_t * pdat, uint64_t offset, uint8_t * buf, uint64_t count)
+{
+	uint64_t blksz = pdat->info.write_bl_len;
+	uint64_t blkno, len, tmp;
+	uint64_t ret = 0;
+
+	blkno = offset / blksz;
+	tmp = offset % blksz;
+	if(tmp > 0)
+	{
+		len = blksz - tmp;
+		if(count < len)
+			len = count;
+		if(sdcard_blk_read(ctx, pdat, &pdat->buf[0], blkno, 1) != 1)
+			return ret;
+		memcpy((void *)(&pdat->buf[tmp]), (const void *)buf, len);
+		if(sdcard_blk_write(ctx, pdat, &pdat->buf[0], blkno, 1) != 1)
+			return ret;
+		buf += len;
+		count -= len;
+		ret += len;
+		blkno += 1;
+	}
+	tmp = count / blksz;
+	if(tmp > 0)
+	{
+		len = tmp * blksz;
+		if(sdcard_blk_write(ctx, pdat, buf, blkno, tmp) != tmp)
+			return ret;
+		buf += len;
+		count -= len;
+		ret += len;
+		blkno += tmp;
+	}
+	if(count > 0)
+	{
+		len = count;
+		if(sdcard_blk_read(ctx, pdat, &pdat->buf[0], blkno, 1) != 1)
+			return ret;
+		memcpy((void *)(&pdat->buf[0]), (const void *)buf, len);
+		if(sdcard_blk_write(ctx, pdat, &pdat->buf[0], blkno, 1) != 1)
+			return ret;
+		ret += len;
+	}
+	return ret;
+}
+
 static inline int sdcard_info(struct xfel_ctx_t * ctx, struct sdcard_pdata_t * pdat)
 {
 	struct sdhci_cmd_t cmd = { 0 };
@@ -697,29 +749,13 @@ static inline int sdcard_info(struct xfel_ctx_t * ctx, struct sdcard_pdata_t * p
 	cmd.resptype = MMC_RSP_R1;
 	if(!fel_sdhci_xfer(ctx, pdat->swapbuf, pdat->swaplen, pdat->cmdlen, &cmd, NULL))
 		return 0;
-
-	printf("  Attached is a %s card\r\n", pdat->info.version & SD_VERSION_SD ? "SD" : "MMC");
-	printf("  Version: %s\r\n", sdcard_version_string(&pdat->info));
-	if(pdat->info.high_capacity)
-		printf("  High capacity card\r\n");
-	printf("  CID: %08X-%08X-%08X-%08X\r\n", pdat->info.cid[0], pdat->info.cid[1], pdat->info.cid[2], pdat->info.cid[3]);
-	printf("  CSD: %08X-%08X-%08X-%08X\r\n", pdat->info.csd[0], pdat->info.csd[1], pdat->info.csd[2], pdat->info.csd[3]);
-	printf("  Max transfer speed: %u HZ\r\n", pdat->info.tran_speed);
-	printf("  Manufacturer ID: %02X\r\n", extract_mid(&pdat->info));
-	printf("  OEM/Application ID: %04X\r\n", extract_oid(&pdat->info));
-	printf("  Product name: '%c%c%c%c%c'\r\n", pdat->info.cid[0] & 0xff, (pdat->info.cid[1] >> 24), (pdat->info.cid[1] >> 16) & 0xff, (pdat->info.cid[1] >> 8) & 0xff, pdat->info.cid[1] & 0xff);
-	printf("  Product revision: %u.%u\r\n", extract_prv(&pdat->info) >> 4, extract_prv(&pdat->info) & 0xf);
-	printf("  Serial no: %0u\r\n", extract_psn(&pdat->info));
-	printf("  Manufacturing date: %u.%u\r\n", extract_year(&pdat->info), extract_month(&pdat->info));
 	return 1;
 }
 
 static int sdcard_helper_init(struct xfel_ctx_t * ctx, struct sdcard_pdata_t * pdat)
 {
 	if(fel_sdhci_init(ctx, &pdat->swapbuf, &pdat->swaplen, &pdat->cmdlen) && sdcard_info(ctx, pdat))
-	{
 		return 1;
-	}
 	return 0;
 }
 
@@ -740,10 +776,48 @@ int sdcard_detect(struct xfel_ctx_t * ctx, char * name, uint64_t * capacity)
 
 int sdcard_read(struct xfel_ctx_t * ctx, uint64_t addr, void * buf, uint64_t len)
 {
+	struct sdcard_pdata_t pdat;
+	struct progress_t p;
+	uint64_t n;
+
+	if(sdcard_helper_init(ctx, &pdat))
+	{
+		progress_start(&p, len);
+		while(len > 0)
+		{
+			n = len > 65536 ? 65536 : len;
+			sdcard_helper_read(ctx, &pdat, addr, buf, n);
+			addr += n;
+			len -= n;
+			buf += n;
+			progress_update(&p, n);
+		}
+		progress_stop(&p);
+		return 1;
+	}
 	return 0;
 }
 
 int sdcard_write(struct xfel_ctx_t * ctx, uint64_t addr, void * buf, uint64_t len)
 {
+	struct sdcard_pdata_t pdat;
+	struct progress_t p;
+	uint64_t n;
+
+	if(sdcard_helper_init(ctx, &pdat))
+	{
+		progress_start(&p, len);
+		while(len > 0)
+		{
+			n = len > 65536 ? 65536 : len;
+			sdcard_helper_write(ctx, &pdat, addr, buf, n);
+			addr += n;
+			len -= n;
+			buf += n;
+			progress_update(&p, n);
+		}
+		progress_stop(&p);
+		return 1;
+	}
 	return 0;
 }
