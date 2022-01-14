@@ -13,41 +13,41 @@ FEL 是全志 SOC 中上 BootROM 中包含的低级程序。可以通过它使�
 
 ✅: 已经支持 — ❌: 还未支持  — ⚠️: 还未完全支持
 
-| Chip |  CPU  |  ID  |  Basic  |  Reset  | Sid | Jtag | DDR | SPI Nor Flash | SPI Nand Flash |
-| -------- | :----- | :----- | -------- | :------- | -------- | -------- | -------- | -------- | -------- |
-| A10 | ARM Cortex-A8 @ 1Ghz | 0x00162300 |   ✅   | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ |
-| A10s | ARM Cortex-A8 @ 1Ghz | 0x00162500 |   ✅   | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ |
-| A13 | ARM Cortex-A8 @ 1Ghz | 0x00162500 |   ✅   | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ |
-| R8 | ARM Cortex-A8 @ 1Ghz | 0x00162500 | ✅ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ |
-| A20 | Dual-Core ARM Cortex-A7 | 0x00165100 | ✅ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ |
-| A23 | Dual-Core ARM Cortex-A7 @ 1.5GHz | 0x00165000 | ✅ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ |
-| A31 | Quad-Core ARM Cortex-A7 | 0x00163300 | ✅ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ |
-| A33 | Quad-Core ARM Cortex-A7 @ 1.2GHz | 0x00166700 | ✅ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ |
-| R16 | Quad-Core ARM Cortex-A7 @ 1.2GHz | 0x00166700 | ✅ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ |
-| A40i | Quad-Core ARM Cortex-A7 @ 1.2 GHz | 0x00170100 | ✅ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ |
-| R40 | Quad-Core ARM Cortex-A7 @ 1.2 GHz | 0x00170100 | ✅ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ |
-| A64 | Quad-Core ARM Cortex-A53 | 0x00168900 | ✅ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ |
-| A80 | Octa-core big.LITTLE Cortex-A15/7 | 0x00163900 | ✅ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ |
-| A83T | Octa-core Cortex-A7 @ 1.6GHz | 0x00167300 | ✅ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ |
-| D1 | XuanTie C906 RISC-V | 0x00185900 | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
-| D1s | XuanTie C906 RISC-V | 0x00185900 | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
-| F133 | XuanTie C906 RISC-V | 0x00185900 | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
-| F1C100S | Single-core ARM9 | 0x00166300 | ✅ | ✅ | ⚠️ | ✅ | ✅ | ✅ | ✅ |
-| F1C200S | Single-core ARM9 | 0x00166300 | ✅ | ✅ | ⚠️ | ✅ | ✅ | ✅ | ✅ |
-| F1C500S | Single-core ARM9 | 0x00166300 | ✅ | ✅ | ⚠️ | ✅ | ✅ | ✅ | ✅ |
-| H2 | Quad-Core ARM Cortex-A7 | 0x00168000 | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
-| H3 | Quad-Core ARM Cortex-A7 @ 1.296GHz | 0x00168000 | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
-| H5 | Quad-Core ARM Cortex-A53 | 0x00171800 | ✅ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ |
-| H6 | Quad-Core ARM Cortex-A53 @ 1.8GHz | 0x00172800 | ✅ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ |
-| H616 | Quad-Core ARM Cortex-A53 | 0x00182300 | ✅ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ |
-| R328 | Dual-Core Cortex-A7 | 0x00182100 | ✅ | ❌ | ✅ | ❌ | ❌ | ❌ | ❌ |
-| R329 | Dual-Core Cortex-A53 | 0x00185100 | ✅ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ |
-| R528 | Dual-Core Cortex-A7 | 0x00185900 | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
-| T507 | Quad-Core ARM Cortex-A53 | 0x00182300 | ✅ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ |
-| V3s | Single-core Cortex-A7 | 0x00168100 | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
-| S3 | Single-core Cortex-A7 | 0x00168100 | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
-| V536 | Dual-Core Cortex-A7 | 0x00181600 | ✅ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ |
-| V831 | Single-core Cortex-A7 800Mhz | 0x00181700 | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
+| Chip |  CPU  |  ID  |  Basic  |  Reset  | Sid | Jtag | DDR | SD Card | SPI Nor Flash | SPI Nand Flash |
+| :------- | ------ | :----: | :------: | :------: | :------: | :------: | :------: | :------: | :------: | :------: |
+| A10 | ARM Cortex-A8 @ 1Ghz | 0x00162300 |   ✅   | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ |
+| A10s | ARM Cortex-A8 @ 1Ghz | 0x00162500 |   ✅   | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ |
+| A13 | ARM Cortex-A8 @ 1Ghz | 0x00162500 |   ✅   | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ |
+| R8 | ARM Cortex-A8 @ 1Ghz | 0x00162500 | ✅ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ |
+| A20 | Dual-Core ARM Cortex-A7 | 0x00165100 | ✅ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ |
+| A23 | Dual-Core ARM Cortex-A7 @ 1.5GHz | 0x00165000 | ✅ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ |
+| A31 | Quad-Core ARM Cortex-A7 | 0x00163300 | ✅ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ |
+| A33 | Quad-Core ARM Cortex-A7 @ 1.2GHz | 0x00166700 | ✅ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ |
+| R16 | Quad-Core ARM Cortex-A7 @ 1.2GHz | 0x00166700 | ✅ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ |
+| A40i | Quad-Core ARM Cortex-A7 @ 1.2 GHz | 0x00170100 | ✅ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ |
+| R40 | Quad-Core ARM Cortex-A7 @ 1.2 GHz | 0x00170100 | ✅ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ |
+| A64 | Quad-Core ARM Cortex-A53 | 0x00168900 | ✅ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ |
+| A80 | Octa-core big.LITTLE Cortex-A15/7 | 0x00163900 | ✅ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ |
+| A83T | Octa-core Cortex-A7 @ 1.6GHz | 0x00167300 | ✅ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ |
+| D1 | XuanTie C906 RISC-V | 0x00185900 | ✅ | ✅ | ✅ | ✅ | ✅ | ❌ | ✅ | ✅ |
+| D1s | XuanTie C906 RISC-V | 0x00185900 | ✅ | ✅ | ✅ | ✅ | ✅ | ❌ | ✅ | ✅ |
+| F133 | XuanTie C906 RISC-V | 0x00185900 | ✅ | ✅ | ✅ | ✅ | ✅ | ❌ | ✅ | ✅ |
+| F1C100S | Single-core ARM9 | 0x00166300 | ✅ | ✅ | ⚠️ | ✅ | ✅ | ❌ | ✅ | ✅ |
+| F1C200S | Single-core ARM9 | 0x00166300 | ✅ | ✅ | ⚠️ | ✅ | ✅ | ❌ | ✅ | ✅ |
+| F1C500S | Single-core ARM9 | 0x00166300 | ✅ | ✅ | ⚠️ | ✅ | ✅ | ❌ | ✅ | ✅ |
+| H2 | Quad-Core ARM Cortex-A7 | 0x00168000 | ✅ | ✅ | ✅ | ✅ | ✅ | ❌ | ✅ | ✅ |
+| H3 | Quad-Core ARM Cortex-A7 @ 1.296GHz | 0x00168000 | ✅ | ✅ | ✅ | ✅ | ✅ | ❌ | ✅ | ✅ |
+| H5 | Quad-Core ARM Cortex-A53 | 0x00171800 | ✅ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ |
+| H6 | Quad-Core ARM Cortex-A53 @ 1.8GHz | 0x00172800 | ✅ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ |
+| H616 | Quad-Core ARM Cortex-A53 | 0x00182300 | ✅ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ |
+| R328 | Dual-Core Cortex-A7 | 0x00182100 | ✅ | ❌ | ✅ | ❌ | ❌ | ❌ | ❌ | ❌ |
+| R329 | Dual-Core Cortex-A53 | 0x00185100 | ✅ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ |
+| R528 | Dual-Core Cortex-A7 | 0x00185900 | ✅ | ✅ | ✅ | ✅ | ✅ | ❌ | ✅ | ✅ |
+| T507 | Quad-Core ARM Cortex-A53 | 0x00182300 | ✅ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ |
+| V3s | Single-core Cortex-A7 | 0x00168100 | ✅ | ✅ | ✅ | ✅ | ✅ | ❌ | ✅ | ✅ |
+| S3 | Single-core Cortex-A7 | 0x00168100 | ✅ | ✅ | ✅ | ✅ | ✅ | ❌ | ✅ | ✅ |
+| V536 | Dual-Core Cortex-A7 | 0x00181600 | ✅ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ |
+| V831 | Single-core Cortex-A7 800Mhz | 0x00181700 | ✅ | ✅ | ✅ | ✅ | ✅ | ❌ | ✅ | ✅ |
 
 # 下载安装
 
@@ -82,12 +82,15 @@ usage:
     xfel sid                                            - 显示sid信息
     xfel jtag                                           - 启用 jtag 调试
     xfel ddr [type]                                     - 初始化 DDR 控制器
+    xfel sdcard                                         - 检测 sdcard
+    xfel sdcard read <address> <length> <file>          - 读取 sdcard 到文件
+    xfel sdcard write <address> <file>                  - 将文件写入 sdcard
     xfel spinor                                         - 检测 spi nor flash
-    xfel spinor erase                                   - 擦除 spi nor flash
+    xfel spinor erase <address> <length>                - 擦除 spi nor flash
     xfel spinor read <address> <length> <file>          - 读取 spi nor flash 到文件
     xfel spinor write <address> <file>                  - 将文件写入 spi nor flash
     xfel spinand                                        - 检测 spi nand flash
-    xfel spinand erase                                  - 擦除 spi nand flash
+    xfel spinand erase <address> <length>               - 擦除 spi nand flash
     xfel spinand read <address> <length> <file>         - 读取 spi nand flash 到文件
     xfel spinand write <address> <file>                 - 将文件写入 spi nand flash
     xfel spinand splwrite <split-size> <address> <file> - 使用拆分支持将文件写入 spi nand flash

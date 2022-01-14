@@ -309,6 +309,103 @@ void fel_write_progress(struct xfel_ctx_t * ctx, uint32_t addr, void * buf, size
 	progress_stop(&p);
 }
 
+int fel_sdhci_init(struct xfel_ctx_t * ctx, uint32_t * swapbuf, uint32_t * swaplen, uint32_t * cmdlen)
+{
+	uint8_t cbuf[2];
+
+	if(!fel_chip_sdhci_init(ctx, swapbuf, swaplen, cmdlen))
+		return 0;
+	cbuf[0] = SDHCI_CMD_INIT;
+	cbuf[1] = SDHCI_CMD_END;
+	if(!fel_chip_sdhci_run(ctx, cbuf, sizeof(cbuf)))
+		return 0;
+	return 1;
+}
+
+int fel_sdhci_xfer(struct xfel_ctx_t * ctx, uint32_t swapbuf, uint32_t swaplen, uint32_t cmdlen, struct sdhci_cmd_t * cmd, struct sdhci_data_t * dat)
+{
+	uint8_t cbuf[256];
+	uint32_t clen;
+	size_t dlen;
+
+	if(!cmd)
+		return 0;
+	if(dat)
+	{
+		clen = 0;
+		dlen = dat->blkcnt * dat->blksz;
+		cbuf[clen++] = SDHCI_CMD_XFER_CMD_DAT;
+		cbuf[clen++] = (cmd->cmdidx >>  0) & 0xff;
+		cbuf[clen++] = (cmd->cmdidx >>  8) & 0xff;
+		cbuf[clen++] = (cmd->cmdidx >> 16) & 0xff;
+		cbuf[clen++] = (cmd->cmdidx >> 24) & 0xff;
+		cbuf[clen++] = (cmd->cmdarg >>  0) & 0xff;
+		cbuf[clen++] = (cmd->cmdarg >>  8) & 0xff;
+		cbuf[clen++] = (cmd->cmdarg >> 16) & 0xff;
+		cbuf[clen++] = (cmd->cmdarg >> 24) & 0xff;
+		cbuf[clen++] = (cmd->resptype >>  0) & 0xff;
+		cbuf[clen++] = (cmd->resptype >>  8) & 0xff;
+		cbuf[clen++] = (cmd->resptype >> 16) & 0xff;
+		cbuf[clen++] = (cmd->resptype >> 24) & 0xff;
+		cbuf[clen++] = (swapbuf >>  0) & 0xff;
+		cbuf[clen++] = (swapbuf >>  8) & 0xff;
+		cbuf[clen++] = (swapbuf >> 16) & 0xff;
+		cbuf[clen++] = (swapbuf >> 24) & 0xff;
+		cbuf[clen++] = ((swapbuf + 16) >>  0) & 0xff;
+		cbuf[clen++] = ((swapbuf + 16) >>  8) & 0xff;
+		cbuf[clen++] = ((swapbuf + 16) >> 16) & 0xff;
+		cbuf[clen++] = ((swapbuf + 16) >> 24) & 0xff;
+		cbuf[clen++] = (dat->flag >>  0) & 0xff;
+		cbuf[clen++] = (dat->flag >>  8) & 0xff;
+		cbuf[clen++] = (dat->flag >> 16) & 0xff;
+		cbuf[clen++] = (dat->flag >> 24) & 0xff;
+		cbuf[clen++] = (dat->blksz >>  0) & 0xff;
+		cbuf[clen++] = (dat->blksz >>  8) & 0xff;
+		cbuf[clen++] = (dat->blksz >> 16) & 0xff;
+		cbuf[clen++] = (dat->blksz >> 24) & 0xff;
+		cbuf[clen++] = (dat->blkcnt >>  0) & 0xff;
+		cbuf[clen++] = (dat->blkcnt >>  8) & 0xff;
+		cbuf[clen++] = (dat->blkcnt >> 16) & 0xff;
+		cbuf[clen++] = (dat->blkcnt >> 24) & 0xff;
+		cbuf[clen++] = SPI_CMD_END;
+		if(dlen + 16 > swaplen)
+			return 0;
+		if(dat->flag & (1 << 1))	/* write */
+			fel_write(ctx, swapbuf + 16, dat->buf, dlen);
+		if((clen > cmdlen) || !fel_chip_sdhci_run(ctx, cbuf, clen))
+			return 0;
+		fel_read(ctx, swapbuf, &cmd->response[0], 16);
+		if(dat->flag & (1 << 0))	/* read */
+			fel_read(ctx, swapbuf + 16, dat->buf, dlen);
+	}
+	else
+	{
+		clen = 0;
+		cbuf[clen++] = SDHCI_CMD_XFER_CMD;
+		cbuf[clen++] = (cmd->cmdidx >>  0) & 0xff;
+		cbuf[clen++] = (cmd->cmdidx >>  8) & 0xff;
+		cbuf[clen++] = (cmd->cmdidx >> 16) & 0xff;
+		cbuf[clen++] = (cmd->cmdidx >> 24) & 0xff;
+		cbuf[clen++] = (cmd->cmdarg >>  0) & 0xff;
+		cbuf[clen++] = (cmd->cmdarg >>  8) & 0xff;
+		cbuf[clen++] = (cmd->cmdarg >> 16) & 0xff;
+		cbuf[clen++] = (cmd->cmdarg >> 24) & 0xff;
+		cbuf[clen++] = (cmd->resptype >>  0) & 0xff;
+		cbuf[clen++] = (cmd->resptype >>  8) & 0xff;
+		cbuf[clen++] = (cmd->resptype >> 16) & 0xff;
+		cbuf[clen++] = (cmd->resptype >> 24) & 0xff;
+		cbuf[clen++] = (swapbuf >>  0) & 0xff;
+		cbuf[clen++] = (swapbuf >>  8) & 0xff;
+		cbuf[clen++] = (swapbuf >> 16) & 0xff;
+		cbuf[clen++] = (swapbuf >> 24) & 0xff;
+		cbuf[clen++] = SPI_CMD_END;
+		if((clen > cmdlen) || !fel_chip_sdhci_run(ctx, cbuf, clen))
+			return 0;
+		fel_read(ctx, swapbuf, &cmd->response[0], 16);
+	}
+	return 1;
+}
+
 int fel_spi_init(struct xfel_ctx_t * ctx, uint32_t * swapbuf, uint32_t * swaplen, uint32_t * cmdlen)
 {
 	uint8_t cbuf[2];

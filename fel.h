@@ -35,8 +35,34 @@ struct chip_t {
 	int (*sid)(struct xfel_ctx_t * ctx, char * sid);
 	int (*jtag)(struct xfel_ctx_t * ctx);
 	int (*ddr)(struct xfel_ctx_t * ctx, const char * type);
+	int (*sdhci_init)(struct xfel_ctx_t * ctx, uint32_t * swapbuf, uint32_t * swaplen, uint32_t * cmdlen);
+	int (*sdhci_run)(struct xfel_ctx_t * ctx, uint8_t * cbuf, uint32_t clen);
 	int (*spi_init)(struct xfel_ctx_t * ctx, uint32_t * swapbuf, uint32_t * swaplen, uint32_t * cmdlen);
 	int (*spi_run)(struct xfel_ctx_t * ctx, uint8_t * cbuf, uint32_t clen);
+};
+
+struct sdhci_cmd_t {
+	uint32_t cmdidx;
+	uint32_t cmdarg;
+	uint32_t resptype;
+	uint32_t response[4];
+};
+
+struct sdhci_data_t {
+	uint8_t * buf;
+	uint32_t flag;
+	uint32_t blksz;
+	uint32_t blkcnt;
+};
+
+enum {
+	SDHCI_CMD_END			= 0x00,
+	SDHCI_CMD_INIT			= 0x01,
+	SDHCI_CMD_RESET			= 0x02,
+	SDHCI_CMD_SET_CLOCK		= 0x03,
+	SDHCI_CMD_SET_WIDTH		= 0x04,
+	SDHCI_CMD_XFER_CMD		= 0x05,
+	SDHCI_CMD_XFER_CMD_DAT	= 0x06,
 };
 
 enum {
@@ -84,6 +110,16 @@ static inline int fel_chip_ddr(struct xfel_ctx_t * ctx, const char * type)
 	return ctx->chip->ddr(ctx, type);
 }
 
+static inline int fel_chip_sdhci_init(struct xfel_ctx_t * ctx, uint32_t * swapbuf, uint32_t * swaplen, uint32_t * cmdlen)
+{
+	return ctx->chip->sdhci_init(ctx, swapbuf, swaplen, cmdlen);
+}
+
+static inline int fel_chip_sdhci_run(struct xfel_ctx_t * ctx, uint8_t * cbuf, uint32_t clen)
+{
+	return ctx->chip->sdhci_run(ctx, cbuf, clen);
+}
+
 static inline int fel_chip_spi_init(struct xfel_ctx_t * ctx, uint32_t * swapbuf, uint32_t * swaplen, uint32_t * cmdlen)
 {
 	return ctx->chip->spi_init(ctx, swapbuf, swaplen, cmdlen);
@@ -102,6 +138,8 @@ void fel_read(struct xfel_ctx_t * ctx, uint32_t addr, void * buf, size_t len);
 void fel_write(struct xfel_ctx_t * ctx, uint32_t addr, void * buf, size_t len);
 void fel_read_progress(struct xfel_ctx_t * ctx, uint32_t addr, void * buf, size_t len);
 void fel_write_progress(struct xfel_ctx_t * ctx, uint32_t addr, void * buf, size_t len);
+int fel_sdhci_init(struct xfel_ctx_t * ctx, uint32_t * swapbuf, uint32_t * swaplen, uint32_t * cmdlen);
+int fel_sdhci_xfer(struct xfel_ctx_t * ctx, uint32_t swapbuf, uint32_t swaplen, uint32_t cmdlen, struct sdhci_cmd_t * cmd, struct sdhci_data_t * dat);
 int fel_spi_init(struct xfel_ctx_t * ctx, uint32_t * swapbuf, uint32_t * swaplen, uint32_t * cmdlen);
 int fel_spi_xfer(struct xfel_ctx_t * ctx, uint32_t swapbuf, uint32_t swaplen, uint32_t cmdlen, void * txbuf, uint32_t txlen, void * rxbuf, uint32_t rxlen);
 

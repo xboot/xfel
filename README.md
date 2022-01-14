@@ -25,6 +25,9 @@ usage:
     xfel sid                                            - Show sid information
     xfel jtag                                           - Enable jtag debug
     xfel ddr [type]                                     - Initial ddr controller with optional type
+    xfel sdcard                                         - Detect sdcard
+    xfel sdcard read <address> <length> <file>          - Read sdcard to file
+    xfel sdcard write <address> <file>                  - Write file to sdcard
     xfel spinor                                         - Detect spi nor flash
     xfel spinor erase <address> <length>                - Erase spi nor flash
     xfel spinor read <address> <length> <file>          - Read spi nor flash to file
