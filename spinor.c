@@ -882,7 +882,11 @@ int spinor_read(struct xfel_ctx_t * ctx, uint64_t addr, void * buf, uint64_t len
 			spinor_helper_read(ctx, &pdat, addr, buf, n);
 			addr += n;
 			len -= n;
+#if defined(_MSC_VER)
+			(char*)buf += n;
+#else
 			buf += n;
+#endif
 			progress_update(&p, n);
 		}
 		progress_stop(&p);
@@ -932,7 +936,11 @@ int spinor_write(struct xfel_ctx_t * ctx, uint64_t addr, void * buf, uint64_t le
 			spinor_helper_write(ctx, &pdat, base, buf, n);
 			base += n;
 			cnt -= n;
+#if defined(_MSC_VER)
+			(char*)buf += n;
+#else
 			buf += n;
+#endif
 			progress_update(&p, n);
 		}
 		progress_stop(&p);

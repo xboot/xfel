@@ -470,7 +470,11 @@ int spinand_read(struct xfel_ctx_t * ctx, uint64_t addr, void * buf, uint64_t le
 			spinand_helper_read(ctx, &pdat, addr, buf, n);
 			addr += n;
 			len -= n;
+#if defined(_MSC_VER)
+			(char*)buf += n;
+#else
 			buf += n;
+#endif
 			progress_update(&p, n);
 		}
 		progress_stop(&p);
@@ -511,7 +515,11 @@ int spinand_write(struct xfel_ctx_t * ctx, uint64_t addr, void * buf, uint64_t l
 			spinand_helper_write(ctx, &pdat, base, buf, n);
 			base += n;
 			cnt -= n;
+#if defined(_MSC_VER)
+			(char*)buf += n;
+#else
 			buf += n;
+#endif
 			progress_update(&p, n);
 		}
 		progress_stop(&p);
@@ -578,9 +586,15 @@ int spinand_splwrite(struct xfel_ctx_t * ctx, uint32_t splitsz, uint64_t addr, v
 				}
 				for(int i = 1; i < copies; i++)
 				{
+#if defined(_MSC_VER)
+					memcpy((char*)nbuf + tsplsz * i, nbuf, tsplsz);
+				}
+				memcpy((char*)nbuf + (nlen - len), buf, len);
+#else
 					memcpy(nbuf + tsplsz * i, nbuf, tsplsz);
 				}
 				memcpy(nbuf + (nlen - len), buf, len);
+#endif
 			}
 			else
 				return 0;

@@ -1,0 +1,126 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="源文件">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="头文件">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
+    </Filter>
+    <Filter Include="资源文件">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="源文件\chips">
+      <UniqueIdentifier>{6266acc4-30e6-46f2-b30e-fe98e7dc2743}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\fel.c">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="..\main.c">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="..\progress.c">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="..\spinand.c">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="..\spinor.c">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="..\chips\a10.c">
+      <Filter>源文件\chips</Filter>
+    </ClCompile>
+    <ClCompile Include="..\chips\a13_a10s_r8.c">
+      <Filter>源文件\chips</Filter>
+    </ClCompile>
+    <ClCompile Include="..\chips\a20.c">
+      <Filter>源文件\chips</Filter>
+    </ClCompile>
+    <ClCompile Include="..\chips\a23.c">
+      <Filter>源文件\chips</Filter>
+    </ClCompile>
+    <ClCompile Include="..\chips\a31.c">
+      <Filter>源文件\chips</Filter>
+    </ClCompile>
+    <ClCompile Include="..\chips\a33_r16.c">
+      <Filter>源文件\chips</Filter>
+    </ClCompile>
+    <ClCompile Include="..\chips\a40i_r40.c">
+      <Filter>源文件\chips</Filter>
+    </ClCompile>
+    <ClCompile Include="..\chips\a64.c">
+      <Filter>源文件\chips</Filter>
+    </ClCompile>
+    <ClCompile Include="..\chips\a80.c">
+      <Filter>源文件\chips</Filter>
+    </ClCompile>
+    <ClCompile Include="..\chips\a83t.c">
+      <Filter>源文件\chips</Filter>
+    </ClCompile>
+    <ClCompile Include="..\chips\d1_f133.c">
+      <Filter>源文件\chips</Filter>
+    </ClCompile>
+    <ClCompile Include="..\chips\f1c100s_f1c200s_f1c500s.c">
+      <Filter>源文件\chips</Filter>
+    </ClCompile>
+    <ClCompile Include="..\chips\h2_h3.c">
+      <Filter>源文件\chips</Filter>
+    </ClCompile>
+    <ClCompile Include="..\chips\h5.c">
+      <Filter>源文件\chips</Filter>
+    </ClCompile>
+    <ClCompile Include="..\chips\h6.c">
+      <Filter>源文件\chips</Filter>
+    </ClCompile>
+    <ClCompile Include="..\chips\h616.c">
+      <Filter>源文件\chips</Filter>
+    </ClCompile>
+    <ClCompile Include="..\chips\r328.c">
+      <Filter>源文件\chips</Filter>
+    </ClCompile>
+    <ClCompile Include="..\chips\r329.c">
+      <Filter>源文件\chips</Filter>
+    </ClCompile>
+    <ClCompile Include="..\chips\r528_t113.c">
+      <Filter>源文件\chips</Filter>
+    </ClCompile>
+    <ClCompile Include="..\chips\t507.c">
+      <Filter>源文件\chips</Filter>
+    </ClCompile>
+    <ClCompile Include="..\chips\v3s_s3.c">
+      <Filter>源文件\chips</Filter>
+    </ClCompile>
+    <ClCompile Include="..\chips\v536.c">
+      <Filter>源文件\chips</Filter>
+    </ClCompile>
+    <ClCompile Include="..\chips\v831.c">
+      <Filter>源文件\chips</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\fel.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="..\progress.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="..\spinand.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="..\spinor.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="..\x.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
+</Project>

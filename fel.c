@@ -50,21 +50,23 @@ static struct chip_t * chips[] = {
 	&v831,
 };
 
-struct usb_request_t {
+PACK(
+	struct usb_request_t {
 	char magic[8];
 	uint32_t length;
 	uint32_t unknown1;
 	uint16_t request;
 	uint32_t length2;
 	char pad[10];
-} __attribute__((packed));
+});
 
-struct fel_request_t {
+PACK(
+	struct fel_request_t {
 	uint32_t request;
 	uint32_t address;
 	uint32_t length;
 	uint32_t pad;
-} __attribute__((packed));
+});
 
 static inline void usb_bulk_send(libusb_device_handle * hdl, int ep, const char * buf, size_t len)
 {
@@ -254,7 +256,11 @@ void fel_read(struct xfel_ctx_t * ctx, uint32_t addr, void * buf, size_t len)
 		n = len > 65536 ? 65536 : len;
 		fel_read_raw(ctx, addr, buf, n);
 		addr += n;
+#if defined(_MSC_VER)
+		(char*)buf += n;
+#else
 		buf += n;
+#endif
 		len -= n;
 	}
 }
@@ -268,7 +274,11 @@ void fel_write(struct xfel_ctx_t * ctx, uint32_t addr, void * buf, size_t len)
 		n = len > 65536 ? 65536 : len;
 		fel_write_raw(ctx, addr, buf, n);
 		addr += n;
+#if defined(_MSC_VER)
+		(char*)buf += n;
+#else
 		buf += n;
+#endif
 		len -= n;
 	}
 }
@@ -284,7 +294,11 @@ void fel_read_progress(struct xfel_ctx_t * ctx, uint32_t addr, void * buf, size_
 		n = len > 65536 ? 65536 : len;
 		fel_read_raw(ctx, addr, buf, n);
 		addr += n;
+#if defined(_MSC_VER)
+		(char*)buf += n;
+#else
 		buf += n;
+#endif
 		len -= n;
 		progress_update(&p, n);
 	}
@@ -302,7 +316,11 @@ void fel_write_progress(struct xfel_ctx_t * ctx, uint32_t addr, void * buf, size
 		n = len > 65536 ? 65536 : len;
 		fel_write_raw(ctx, addr, buf, n);
 		addr += n;
+#if defined(_MSC_VER)
+		(char*)buf += n;
+#else
 		buf += n;
+#endif
 		len -= n;
 		progress_update(&p, n);
 	}
@@ -389,7 +407,11 @@ int fel_spi_xfer(struct xfel_ctx_t * ctx, uint32_t swapbuf, uint32_t swaplen, ui
 			fel_write(ctx, swapbuf, txbuf, n);
 			if(!fel_chip_spi_run(ctx, cbuf, clen))
 				return 0;
+#if defined(_MSC_VER)
+			(char*)txbuf += n;
+#else
 			txbuf += n;
+#endif
 			txlen -= n;
 		}
 		while(rxlen > 0)
@@ -409,7 +431,11 @@ int fel_spi_xfer(struct xfel_ctx_t * ctx, uint32_t swapbuf, uint32_t swaplen, ui
 			if(!fel_chip_spi_run(ctx, cbuf, clen))
 				return 0;
 			fel_read(ctx, swapbuf, rxbuf, n);
+#if defined(_MSC_VER)
+			(char*)rxbuf += n;
+#else
 			rxbuf += n;
+#endif
 			rxlen -= n;
 		}
 		clen = 0;

@@ -8,6 +8,12 @@ extern "C" {
 #include <x.h>
 #include <progress.h>
 
+#if defined(_MSC_VER)
+#define PACK( __Declaration__ ) __pragma( pack(push, 1) ) __Declaration__ __pragma( pack(pop))
+#else
+#define PACK( __Declaration__ ) __Declaration__ __attribute__((__packed__))
+#endif
+
 struct xfel_ctx_t;
 struct chip_t;
 

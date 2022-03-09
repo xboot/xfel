@@ -15,9 +15,13 @@ extern "C" {
 #elif defined(__OpenBSD__) || defined(__NetBSD__) || defined(__FreeBSD__) || defined(__DragonFly__)
 # include <sys/endian.h>
 #elif defined(__WINDOWS__)
+#if defined(_MSC_VER)
+# include <winsock2.h>
+#else
 # include <winsock2.h>
 # include <sys/param.h>
 # include <sys/time.h>
+#endif
 #else
 # error "platform not supported!"
 #endif
@@ -29,7 +33,9 @@ extern "C" {
 #include <errno.h>
 #include <ctype.h>
 #include <assert.h>
+#if !defined(_MSC_VER)
 #include <unistd.h>
+#endif
 #include <libusb.h>
 
 static inline uint16_t __swab16(uint16_t x)
@@ -65,7 +71,7 @@ static inline uint32_t __swahb32(uint32_t x)
 	return ( ((x & (uint32_t)0x00ff00ffUL)<<8) | ((x & (uint32_t)0xff00ff00UL)>>8) );
 }
 
-#if BYTE_ORDER == BIG_ENDIAN
+#if !defined(_MSC_VER) && BYTE_ORDER == BIG_ENDIAN
 #define cpu_to_le64(x)	(__swab64((uint64_t)(x)))
 #define le64_to_cpu(x)	(__swab64((uint64_t)(x)))
 #define cpu_to_le32(x)	(__swab32((uint32_t)(x)))
