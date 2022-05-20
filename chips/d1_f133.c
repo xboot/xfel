@@ -2952,8 +2952,7 @@ static int chip_ddr(struct xfel_ctx_t * ctx, const char * type)
 			return 1;
 		}
 	}
-	printf("xfel ddr d1   - Initial ddr controller for D1\r\n");
-	printf("xfel ddr f133 - Initial ddr controller for F133\r\n");
+	printf("invalid ddr type, expect d1 or f133\r\n");
 	return 0;
 }
 
