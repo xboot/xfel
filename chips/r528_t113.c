@@ -4449,13 +4449,13 @@ enum {
 	EFUSE_HV_SWITCH	= 0x07090000 + 0x204,
 };
 
-static uint32_t efuse_read_key(struct xfel_ctx_t * ctx, uint32_t key)
+static uint32_t efuse_read(struct xfel_ctx_t * ctx, uint32_t offset)
 {
 	uint32_t val;
 
 	val = payload_read32(ctx, SID_PRCTL);
 	val &= ~((0x1ff << 16) | 0x3);
-	val |= key << 16;
+	val |= offset << 16;
 	payload_write32(ctx, SID_PRCTL, val);
 	val &= ~((0xff << 8) | 0x3);
 	val |= (0xac << 8) | 0x2;
@@ -4468,7 +4468,7 @@ static uint32_t efuse_read_key(struct xfel_ctx_t * ctx, uint32_t key)
 	return val;
 }
 
-static void efuse_program_key(struct xfel_ctx_t * ctx, uint32_t key, uint32_t value)
+static void efuse_write(struct xfel_ctx_t * ctx, uint32_t offset, uint32_t value)
 {
 	uint32_t val;
 
@@ -4476,7 +4476,7 @@ static void efuse_program_key(struct xfel_ctx_t * ctx, uint32_t key, uint32_t va
 	payload_write32(ctx, SID_PRKEY, value);
 	val = payload_read32(ctx, SID_PRCTL);
 	val &= ~((0x1ff << 16) | 0x3);
-	val |= key << 16;
+	val |= offset << 16;
 	payload_write32(ctx, SID_PRCTL, val);
 	val &= ~((0xff << 8) | 0x3);
 	val |= (0xac << 8) | 0x1;
@@ -4521,7 +4521,7 @@ static int chip_extra(struct xfel_ctx_t * ctx, int argc, char * argv[])
 					{
 						uint32_t count = sids[n].size_bits / 32;
 						for(int i = 0; i < count; i++)
-							buffer[i] = efuse_read_key(ctx, sids[n].offset + i * 4);
+							buffer[i] = efuse_read(ctx, sids[n].offset + i * 4);
 						printf("%s:(0x%04x %d-bits)", sids[n].name, sids[n].offset, sids[n].size_bits);
 						for(int i = 0; i < count; i++)
 						{
@@ -4535,24 +4535,37 @@ static int chip_extra(struct xfel_ctx_t * ctx, int argc, char * argv[])
 				}
 				else if(!strcmp(argv[0], "read32") && (argc == 2))
 				{
-					uint32_t key = strtoul(argv[1], NULL, 0);
-					printf("0x%08x\r\n", efuse_read_key(ctx, key));
+					uint32_t offset = strtoul(argv[1], NULL, 0);
+					printf("0x%08x\r\n", efuse_read(ctx, offset));
 					return 1;
 				}
 				else if(!strcmp(argv[0], "write32") && (argc == 3))
 				{
-					uint32_t key = strtoul(argv[1], NULL, 0);
+					uint32_t offset = strtoul(argv[1], NULL, 0);
 					size_t value = strtoul(argv[2], NULL, 0);
-					efuse_program_key(ctx, key, value);
+					efuse_write(ctx, offset, value);
 					return 1;
+				}
+				else if(!strcmp(argv[0], "write") && (argc == 2))
+				{
+					uint32_t offset = strtoul(argv[1], NULL, 0);
+					uint64_t len;
+					uint32_t * buf = (uint32_t *)file_load(argv[2], &len);
+					if(buf)
+					{
+						for(int i = 0; i < len / 4; i++)
+							efuse_write(ctx, offset + i * 4, buf[i]);
+						free(buf);
+					}
 				}
 			}
 		}
 	}
 	printf("usage:\r\n");
-	printf("    xfel extra efuse dump                  - Dump all of the efuse information\r\n");
-	printf("    xfel extra efuse read32 <key>          - Read 32-bits value from efuse\r\n");
-	printf("    xfel extra efuse write32 <key> <value> - Write 32-bits value to efuse\r\n");
+	printf("    xfel extra efuse dump                     - Dump all of the efuse information\r\n");
+	printf("    xfel extra efuse read32 <offset>          - Read 32-bits value from efuse\r\n");
+	printf("    xfel extra efuse write32 <offset> <value> - Write 32-bits value to efuse\r\n");
+	printf("    xfel extra efuse write <offset> <file>    - Write file to efuse\r\n");
 	return 0;
 }
 
