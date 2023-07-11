@@ -1,5 +1,5 @@
-#ifndef __FILE_H__
-#define __FILE_H__
+#ifndef __MISC_H__
+#define __MISC_H__
 
 #ifdef __cplusplus
 extern "C" {
@@ -9,9 +9,11 @@ extern "C" {
 
 uint64_t file_save(const char * filename, void * buf, uint64_t len);
 void * file_load(const char * filename, uint64_t * len);
+unsigned char hex_string(const char * s, int o);
+void hexdump(uint32_t addr, void * buf, size_t len);
 
 #ifdef __cplusplus
 }
 #endif
 
-#endif /* __FILE_H__ */
+#endif /* __MISC_H__ */

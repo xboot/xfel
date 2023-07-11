@@ -5,49 +5,6 @@
 #include <spinand.h>
 #include <libusb.h>
 
-static inline unsigned char hex_to_bin(char c)
-{
-	if((c >= 'a') && (c <= 'f'))
-		return c - 'a' + 10;
-	if((c >= '0') && (c <= '9'))
-		return c - '0';
-	if((c >= 'A') && (c <= 'F'))
-		return c - 'A' + 10;
-	return 0;
-}
-
-static unsigned char hex_string(const char * s, int o)
-{
-	return (hex_to_bin(s[o]) << 4) | hex_to_bin(s[o + 1]);
-}
-
-static void hexdump(uint32_t addr, void * buf, size_t len)
-{
-	unsigned char * p = buf;
-	size_t i, j;
-
-	for(j = 0; j < len; j += 16)
-	{
-		printf("%08x: ", (uint32_t)(addr + j));
-		for(i = 0; i < 16; i++)
-		{
-			if(j + i < len)
-				printf("%02x ", p[j + i]);
-			else
-				printf("   ");
-		}
-		putchar(' ');
-		for(i = 0; i < 16; i++)
-		{
-			if(j + i >= len)
-				putchar(' ');
-			else
-				putchar(isprint(p[j + i]) ? p[j + i] : '.');
-		}
-		printf("\r\n");
-	}
-}
-
 static void usage(void)
 {
 	printf("xfel(v1.3.2) - https://github.com/xboot/xfel\r\n");
