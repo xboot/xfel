@@ -4492,16 +4492,26 @@ static const struct sid_section_t {
 	uint32_t offset;
 	uint32_t size_bits;
 } sids[] = {
-	{ "chipid",         0x0000,  128 },
-	{ "brom-conf-try",  0x0010,   32 },
-	{ "thermal-sensor", 0x0014,   64 },
-	{ "ft-zone",        0x001c,  128 },
-	{ "tvout",          0x002c,   32 },
-	{ "tvout-gamma",    0x0030,   64 },
-	{ "oem-program",    0x0038,   64 },
-	{ "write-protect",  0x0040,   32 },
-	{ "read-protect",   0x0044,   32 },
-	{ "reserved",       0x0048, 1472 },
+	{ "chipid",             0x0000,  128 },
+	{ "brom-conf-try",      0x0010,   32 },
+	{ "thermal-sensor",     0x0014,   64 },
+	{ "ft-zone",            0x001c,  128 },
+	{ "tvout",              0x002c,   32 },
+	{ "tvout-gamma",        0x0030,   64 },
+	{ "oem-program",        0x0038,   64 },
+	{ "write-protect",      0x0040,   32 },
+	{ "read-protect",       0x0044,   32 },
+	{ "reserved1",          0x0048,   64 },
+	{ "huk",                0x0050,  192 },
+	{ "reserved2",          0x0068,   64 },
+	{ "rotpk",              0x0070,  256 },
+	{ "ssk",                0x0090,  256 },
+	{ "rssk",               0x00b0,  128 },
+	{ "hdcp-hash",          0x00c0,  128 },
+	{ "nv1",                0x00d0,   32 },
+	{ "nv2",                0x00d4,   32 },
+	{ "reserved3",          0x00d8,   96 },
+	{ "oem-program-secure", 0x00e4,  224 },
 };
 
 static int chip_extra(struct xfel_ctx_t * ctx, int argc, char * argv[])
@@ -4550,11 +4560,28 @@ static int chip_extra(struct xfel_ctx_t * ctx, int argc, char * argv[])
 				{
 					uint32_t offset = strtoul(argv[1], NULL, 0);
 					uint64_t len;
-					uint32_t * buf = (uint32_t *)file_load(argv[2], &len);
-					if(buf)
+					void * buf = file_load(argv[2], &len);
+					if(buf && (len > 0))
 					{
-						for(int i = 0; i < len / 4; i++)
-							efuse_write(ctx, offset + i * 4, buf[i]);
+						uint8_t * p = buf;
+						uint32_t l = len;
+						uint32_t o = 0;
+						uint32_t v;
+						while(l >= 4)
+						{
+							v = *((uint32_t *)p);
+							efuse_write(ctx, offset + o, v);
+							l -= 4;
+							o += 4;
+							p += 4;
+						}
+						if(l > 0)
+						{
+							uint32_t v = 0;
+							for(int i = 0; i < l; i++)
+								v = ((v << 8) & 0xffffff00) | p[i];
+							efuse_write(ctx, offset + o, v);
+						}
 						free(buf);
 					}
 				}
