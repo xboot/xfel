@@ -1155,7 +1155,7 @@ static int chip_extra(struct xfel_ctx_t * ctx, int argc, char * argv[])
 						uint32_t count = sids[n].size_bits / 32;
 						for(int i = 0; i < count; i++)
 							buffer[i] = payload_read32(ctx, 0x01c23800 + sids[n].offset + i * 4);
-						printf("%s:", sids[n].name);
+						printf("%s:(0x%04x %d-bits)", sids[n].name, sids[n].offset, sids[n].size_bits);
 						for(int i = 0; i < count; i++)
 						{
 							if(i >= 0 && ((i % 8) == 0))
