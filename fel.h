@@ -6,6 +6,7 @@ extern "C" {
 #endif
 
 #include <x.h>
+#include <file.h>
 #include <progress.h>
 
 struct xfel_ctx_t;
