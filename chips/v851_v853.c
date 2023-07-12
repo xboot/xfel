@@ -1719,7 +1719,7 @@ static int chip_extra(struct xfel_ctx_t * ctx, int argc, char * argv[])
 					efuse_write(ctx, offset, value);
 					return 1;
 				}
-				else if(!strcmp(argv[0], "write") && (argc == 2))
+				else if(!strcmp(argv[0], "write") && (argc == 3))
 				{
 					uint32_t offset = strtoul(argv[1], NULL, 0);
 					uint64_t len;
@@ -1746,6 +1746,7 @@ static int chip_extra(struct xfel_ctx_t * ctx, int argc, char * argv[])
 							efuse_write(ctx, offset + o, v);
 						}
 						free(buf);
+						return 1;
 					}
 				}
 			}
