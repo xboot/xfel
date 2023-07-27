@@ -21,6 +21,7 @@ extern struct chip_t r128;
 extern struct chip_t r328;
 extern struct chip_t r329;
 extern struct chip_t r528_t113;
+extern struct chip_t r818;
 extern struct chip_t t507;
 extern struct chip_t v3s_s3;
 extern struct chip_t v536;
@@ -49,6 +50,7 @@ static struct chip_t * chips[] = {
 	&r328,
 	&r329,
 	&r528_t113,
+	&r818,
 	&t507,
 	&v3s_s3,
 	&v536,
