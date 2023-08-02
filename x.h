@@ -97,6 +97,10 @@ static inline uint32_t __swahb32(uint32_t x)
 #define be16_to_cpu(x)	(__swab16((uint16_t)(x)))
 #endif
 
+#define MIN(a, b)		({typeof(a) _amin = (a); typeof(b) _bmin = (b); (void)(&_amin == &_bmin); _amin < _bmin ? _amin : _bmin;})
+#define MAX(a, b)		({typeof(a) _amax = (a); typeof(b) _bmax = (b); (void)(&_amax == &_bmax); _amax > _bmax ? _amax : _bmax;})
+#define CLAMP(v, a, b)	MIN(MAX(a, v), b)
+
 #define ARRAY_SIZE(array)	(sizeof(array) / sizeof((array)[0]))
 #define X(...)				("" #__VA_ARGS__ "")
 

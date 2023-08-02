@@ -418,6 +418,16 @@ static int chip_ddr(struct xfel_ctx_t * ctx, const char * type)
 	return 1;
 }
 
+static int chip_sdhci_init(struct xfel_ctx_t * ctx, uint32_t * swapbuf, uint32_t * swaplen, uint32_t * cmdlen)
+{
+	return 0;
+}
+
+static int chip_sdhci_run(struct xfel_ctx_t * ctx, uint8_t * cbuf, uint32_t clen)
+{
+	return 0;
+}
+
 static int chip_spi_init(struct xfel_ctx_t * ctx, uint32_t * swapbuf, uint32_t * swaplen, uint32_t * cmdlen)
 {
 	static const uint8_t payload[] = {
@@ -554,6 +564,8 @@ struct chip_t f1c100s_f1c200s_f1c500s = {
 	.sid = chip_sid,
 	.jtag = chip_jtag,
 	.ddr = chip_ddr,
+	.sdhci_init = chip_sdhci_init,
+	.sdhci_run = chip_sdhci_run,
 	.spi_init = chip_spi_init,
 	.spi_run = chip_spi_run,
 	.extra = chip_extra,

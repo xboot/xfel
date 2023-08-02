@@ -1,6 +1,7 @@
 #include <fel.h>
 #include <sha256.h>
 #include <ecdsa256.h>
+#include <sdcard.h>
 #include <spinor.h>
 #include <spinand.h>
 #include <libusb.h>
@@ -22,6 +23,9 @@ static void usage(void)
 	printf("    xfel jtag                                           - Enable jtag debug\r\n");
 	printf("    xfel ddr [type]                                     - Initial ddr controller with optional type\r\n");
 	printf("    xfel sign <public-key> <private-key> <file>         - Generate ecdsa256 signature file for sha256 of sid\r\n");
+	printf("    xfel sdcard                                         - Detect sdcard\r\n");
+	printf("    xfel sdcard read <address> <length> <file>          - Read sdcard to file\r\n");
+	printf("    xfel sdcard write <address> <file>                  - Write file to sdcard\r\n");
 	printf("    xfel spinor                                         - Detect spi nor flash\r\n");
 	printf("    xfel spinor erase <address> <length>                - Erase spi nor flash\r\n");
 	printf("    xfel spinor read <address> <length> <file>          - Read spi nor flash to file\r\n");
@@ -297,6 +301,56 @@ int main(int argc, char * argv[])
 		}
 		else
 			usage();
+	}
+	else if(!strcmp(argv[1], "sdcard"))
+	{
+		argc -= 2;
+		argv += 2;
+		if(argc == 0)
+		{
+			char name[128];
+			uint64_t capacity;
+
+			if(sdcard_detect(&ctx, name, &capacity))
+				printf("Found sdcard '%s' with %lld bytes\r\n", name, (long long)capacity);
+			else
+				printf("Can't detect any sdcard\r\n");
+		}
+		else
+		{
+			if(!strcmp(argv[0], "read") && (argc == 4))
+			{
+				argc -= 1;
+				argv += 1;
+				uint64_t addr = strtoull(argv[0], NULL, 0);
+				uint64_t len = strtoull(argv[1], NULL, 0);
+				char * buf = malloc(len);
+				if(buf)
+				{
+					if(sdcard_read(&ctx, addr, buf, len))
+						file_save(argv[2], buf, len);
+					else
+						printf("Can't read sdcard\r\n");
+					free(buf);
+				}
+			}
+			else if(!strcmp(argv[0], "write") && (argc == 3))
+			{
+				argc -= 1;
+				argv += 1;
+				uint64_t addr = strtoull(argv[0], NULL, 0);
+				uint64_t len;
+				void * buf = file_load(argv[1], &len);
+				if(buf)
+				{
+					if(!sdcard_write(&ctx, addr, buf, len))
+						printf("Can't write sdcard\r\n");
+					free(buf);
+				}
+			}
+			else
+				usage();
+		}
 	}
 	else if(!strcmp(argv[1], "spinor"))
 	{
