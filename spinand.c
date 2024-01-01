@@ -155,6 +155,10 @@ static const struct spinand_info_t spinand_infos[] = {
 	{ "HYF1GQ4U",        SPINAND_ID(0xc9, 0x51),       2048, 128,  64, 1024, 1, 1 },
 	{ "HYF2GQ4U",        SPINAND_ID(0xc9, 0x52),       2048, 128,  64, 2048, 1, 1 },
 	{ "HYF4GQ4U",        SPINAND_ID(0xc9, 0x54),       2048, 128,  64, 4096, 1, 1 },
+
+	/* FORESEE */
+	{ "F35SQA001G",      SPINAND_ID(0xCD, 0x71, 0x71), 2048,  64,  64, 1024, 1, 1 },
+	{ "F35SQA002G",      SPINAND_ID(0xCD, 0x72, 0x72), 2048,  64,  64, 2048, 1, 1 },
 };
 
 static inline int spinand_info(struct xfel_ctx_t * ctx, struct spinand_pdata_t * pdat)
