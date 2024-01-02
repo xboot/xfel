@@ -70,19 +70,26 @@ usage:
 | H3 | Quad-Core ARM Cortex-A7 @ 1.296GHz | 0x00168000 | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
 | H5 | Quad-Core ARM Cortex-A53 | 0x00171800 | ✅ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ |
 | H6 | Quad-Core ARM Cortex-A53 @ 1.8GHz | 0x00172800 | ✅ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ |
-| H616 | Quad-Core ARM Cortex-A53 | 0x00182300 | ✅ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ |
+| H313 | Quad-Core ARM Cortex-A53 | 0x00182300 | ✅ | ❌ | ❌ | ❌ | ✅ | ❌ | ❌ |
+| H616 | Quad-Core ARM Cortex-A53 | 0x00182300 | ✅ | ❌ | ❌ | ❌ | ✅ | ❌ | ❌ |
+| H618 | Quad-Core ARM Cortex-A53 | 0x00182300 | ✅ | ❌ | ❌ | ❌ | ✅ | ❌ | ❌ |
 | R128 | ARM Cortex-M33 and C906 RISC-V | 0x00188300 | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
 | R328 | Dual-Core Cortex-A7 | 0x00182100 | ✅ | ❌ | ✅ | ❌ | ❌ | ❌ | ❌ |
 | R329 | Dual-Core Cortex-A53 | 0x00185100 | ✅ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ |
 | R528 | Dual-Core Cortex-A7 | 0x00185900 | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
 | T113 | Dual-Core Cortex-A7 | 0x00185900 | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
-| T507 | Quad-Core ARM Cortex-A53 | 0x00182300 | ✅ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ |
+| T507 | Quad-Core ARM Cortex-A53 | 0x00182300 | ✅ | ❌ | ❌ | ❌ | ✅ | ❌ | ❌ |
 | V3s | Single-core Cortex-A7 | 0x00168100 | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
 | S3 | Single-core Cortex-A7 | 0x00168100 | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
 | V536 | Dual-Core Cortex-A7 | 0x00181600 | ✅ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ |
 | V831 | Single-core Cortex-A7 800Mhz | 0x00181700 | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
 | V851 | Single-core Cortex-A7 1Ghz + E907 RISC-V | 0x00188600 | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
 | V853 | Single-core Cortex-A7 1Ghz + E907 RISC-V | 0x00188600 | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
+| A523 | Octa-core Cortex-A55 2.0Ghz + E906 RISC-V + HIFI4 DSP | 0x00189000 | ✅ | ❌ | ✅ | ❌ | ✅ | ❌ | ❌ |
+| A527 | Octa-core Cortex-A55 2.0Ghz + E906 RISC-V + HIFI4 DSP | 0x00189000 | ✅ | ❌ | ✅ | ❌ | ✅ | ❌ | ❌ |
+| MR527 | Octa-core Cortex-A55 2.0Ghz + E906 RISC-V + HIFI4 DSP | 0x00189000 | ✅ | ❌ | ✅ | ❌ | ✅ | ❌ | ❌ |
+| T527 | Octa-core Cortex-A55 2.0Ghz + E906 RISC-V + HIFI4 DSP | 0x00189000 | ✅ | ❌ | ✅ | ❌ | ✅ | ❌ | ❌ |
+
 
 # 编译安装
 
