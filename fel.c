@@ -8,6 +8,7 @@ extern struct chip_t a31;
 extern struct chip_t a33_r16;
 extern struct chip_t a40i_r40;
 extern struct chip_t a50;
+extern struct chip_t a523_a527_t527;
 extern struct chip_t a64;
 extern struct chip_t a80;
 extern struct chip_t a83t;
@@ -26,7 +27,6 @@ extern struct chip_t v3s_s3;
 extern struct chip_t v536;
 extern struct chip_t v831;
 extern struct chip_t v851_v853;
-extern struct chip_t a523;
 
 static struct chip_t * chips[] = {
 	&a10,
@@ -37,6 +37,7 @@ static struct chip_t * chips[] = {
 	&a33_r16,
 	&a40i_r40,
 	&a50,
+	&a523_a527_t527,
 	&a64,
 	&a80,
 	&a83t,
@@ -55,7 +56,6 @@ static struct chip_t * chips[] = {
 	&v536,
 	&v831,
 	&v851_v853,
-	&a523,
 };
 
 struct usb_request_t {
