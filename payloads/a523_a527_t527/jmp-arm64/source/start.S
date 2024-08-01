@@ -37,7 +37,7 @@ _start:
 	b reset
 
 _adr:
-	.word 0x11223344
+	.word 0x40000000
 
 reset:
 	ldr r0, =0x00047fe0
