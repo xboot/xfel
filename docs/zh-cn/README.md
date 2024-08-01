@@ -85,10 +85,10 @@ usage:
 | V831 | Single-core Cortex-A7 800Mhz | 0x00181700 | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
 | V851 | Single-core Cortex-A7 1Ghz + E907 RISC-V | 0x00188600 | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
 | V853 | Single-core Cortex-A7 1Ghz + E907 RISC-V | 0x00188600 | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
-| A523 | Octa-core Cortex-A55 2.0Ghz + E906 RISC-V + HIFI4 DSP | 0x00189000 | ✅ | ❌ | ✅ | ❌ | ✅ | ❌ | ❌ |
-| A527 | Octa-core Cortex-A55 2.0Ghz + E906 RISC-V + HIFI4 DSP | 0x00189000 | ✅ | ❌ | ✅ | ❌ | ✅ | ❌ | ❌ |
-| T527 | Octa-core Cortex-A55 2.0Ghz + E906 RISC-V + HIFI4 DSP | 0x00189000 | ✅ | ❌ | ✅ | ❌ | ✅ | ❌ | ❌ |
-| MR527 | Octa-core Cortex-A55 2.0Ghz + E906 RISC-V + HIFI4 DSP | 0x00189000 | ✅ | ❌ | ✅ | ❌ | ✅ | ❌ | ❌ |
+| A523 | Octa-core Cortex-A55 2.0Ghz + E906 RISC-V + HIFI4 DSP | 0x00189000 | ✅ | ✅ | ✅ | ❌ | ✅ | ❌ | ❌ |
+| A527 | Octa-core Cortex-A55 2.0Ghz + E906 RISC-V + HIFI4 DSP | 0x00189000 | ✅ | ✅ | ✅ | ❌ | ✅ | ❌ | ❌ |
+| T527 | Octa-core Cortex-A55 2.0Ghz + E906 RISC-V + HIFI4 DSP | 0x00189000 | ✅ | ✅ | ✅ | ❌ | ✅ | ❌ | ❌ |
+| MR527 | Octa-core Cortex-A55 2.0Ghz + E906 RISC-V + HIFI4 DSP | 0x00189000 | ✅ | ✅ | ✅ | ❌ | ✅ | ❌ | ❌ |
 
 # 编译安装
 
