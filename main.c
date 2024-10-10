@@ -79,7 +79,7 @@ int main(int argc, char * argv[])
 
 	if(!fel_init(&ctx))
 	{
-		printf("ERROR: Can't found any FEL device\r\n");
+		printf("ERROR: No FEL device found!\r\n");
 		if(ctx.hdl)
 			libusb_close(ctx.hdl);
 		libusb_exit(NULL);
