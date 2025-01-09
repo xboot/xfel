@@ -31,6 +31,7 @@ extern struct chip_t v821;
 extern struct chip_t a733;
 extern struct chip_t t536;
 
+
 static struct chip_t * chips[] = {
 	&a10,
 	&a13_a10s_r8,

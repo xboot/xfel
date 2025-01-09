@@ -15,7 +15,7 @@ RM			:= rm -fr
 ASFLAGS		:= -g -ggdb -Wall -O3
 CFLAGS		:= -g -ggdb -Wall -O3
 CXXFLAGS	:= -g -ggdb -Wall -O3
-LDFLAGS		:=
+LDFLAGS		:= -Wl,-z,relro -Wl,-z,now -Wl,-z,shstk
 ARFLAGS		:= -rcs
 MCFLAGS		:=
 
