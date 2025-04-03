@@ -2,7 +2,7 @@
 # Top makefile
 #
 
-CROSS		?= ~/9tripod/tina-v821/out/toolchain/nds32le-linux-glibc-v5d/bin/riscv32-unknown-linux-
+CROSS		?= ~/9tripod/tina-v821-v11/prebuilt/rootfsbuilt/riscv/nds32le-linux-musl-v5d/bin/riscv32-linux-musl-
 NAME		:= read32
 
 #
