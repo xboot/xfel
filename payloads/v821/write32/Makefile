@@ -2,7 +2,7 @@
 # Top makefile
 #
 
-CROSS		?= ~/9tripod/tina-v821-v11/prebuilt/rootfsbuilt/riscv/nds32le-linux-musl-v5d/bin/riscv32-linux-musl-
+CROSS		?= ~/Documents/Xuantie-900-gcc-linux-5.10.4-glibc-x86_64-V2.8.1/bin/riscv64-unknown-linux-gnu-
 NAME		:= write32
 
 #
@@ -26,7 +26,7 @@ LDFLAGS		:= -T link.ld -nostdlib
 ARFLAGS		:= -rcs
 OCFLAGS		:= -v -O binary
 ODFLAGS		:=
-MCFLAGS		:= -march=rv32imafcxthead -mabi=ilp32f -mcmodel=medany -fno-stack-protector
+MCFLAGS		:= -march=rv32imacxtheade -mabi=ilp32 -mtune=e907 -mcmodel=medany -fno-stack-protector
 
 LIBDIRS		:=
 LIBS 		:=
