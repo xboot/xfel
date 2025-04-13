@@ -37,8 +37,6 @@ static void usage(void)
 int main(int argc, char * argv[])
 {
 	struct xfel_ctx_t ctx = { 0 };
-    libusb_context *context = NULL;
-
 
 	if(argc < 2)
 	{
@@ -54,25 +52,20 @@ int main(int argc, char * argv[])
 		}
 	}
 
-	libusb_device **list = NULL;
+	libusb_device ** list = NULL;
+	libusb_context * context = NULL;
 	libusb_init(&context);
 	int count = libusb_get_device_list(context, &list);
-	assert(count > 0);
-
-	for (size_t i = 0; i < count; ++i) {
-		libusb_device *device = list[i];
+	for(int i = 0; i < count; i++)
+	{
+		libusb_device * device = list[i];
 		struct libusb_device_descriptor desc;
-		int rc = libusb_get_device_descriptor(device, &desc);
-		if(rc != 0)
-			{
-			printf("ERROR: Can't get device list: %d\r\n", rc);
-		}
-		if(desc.idVendor == 0x1f3a && desc.idProduct == 0xefe8) {
-			int rc = libusb_open(device, &ctx.hdl);
-			if(rc != 0)
-			{
-				printf("ERROR: Can't connect to device: %d\r\n", rc);
-			}
+		if(libusb_get_device_descriptor(device, &desc) != 0)
+			printf("ERROR: Can't get device list\r\n");
+		if((desc.idVendor == 0x1f3a) && (desc.idProduct == 0xefe8))
+		{
+			if(libusb_open(device, &ctx.hdl) != 0)
+				printf("ERROR: Can't connect to device\r\n");
 			break;
 		}
 	}
