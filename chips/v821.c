@@ -1549,18 +1549,18 @@ static int chip_extra(struct xfel_ctx_t * ctx, int argc, char * argv[])
 					uint64_t addr = strtoull(argv[1], NULL, 0);
 					uint32_t val;
 
-					/* Turn on A27L power */
+					/* Turn on A27L2 power */
 					val = payload_read32(ctx, 0x4a011064);
 					val |= 0x1 << 8;
 					payload_write32(ctx, 0x4a011064, val);
 
-					/* Enable A27L clk, run hosc */
+					/* Enable A27L2 clk, run hosc */
 					payload_write32(ctx, 0x4a010588, 0x1 << 31);
 
-					/* Enable A27L mtclk, run hosc */
+					/* Enable A27L2 mtclk, run hosc */
 					payload_write32(ctx, 0x42001010, 0x1 << 31);
 
-					/* Enable A27L msgbus/rvcfg clock and set axi div */
+					/* Enable A27L2 msgbus/rvcfg clock and set axi div */
 					val = payload_read32(ctx, 0x4200107c);
 					val &= ~(0x3 << 8);
 					val |= (0x1 << 8) | (0x3 << 6);
@@ -1569,21 +1569,21 @@ static int chip_extra(struct xfel_ctx_t * ctx, int argc, char * argv[])
 					/* Set E907 clk to hosc for delay */
 					payload_write32(ctx, 0x4a010584, 0);
 
-					/* Release A27L msgbus/rvcfg reset */
+					/* Release A27L2 msgbus/rvcfg reset */
 					val = payload_read32(ctx, 0x42001094);
 					val |= 0x3 << 27;
 					payload_write32(ctx, 0x42001094, val);
 
-					/* Set A27L start addr */
+					/* Set A27L2 start addr */
 					payload_write32(ctx, 0x49100204, addr);
 
 					/* Clean wfi mode */
 					payload_write32(ctx, 0x49100004, 0);
 
-					/* Keep A27L start address */
+					/* Keep A27L2 start address */
 					while(payload_read32(ctx, 0x49100204) == 0x0);
 
-					/* Release A27L cpu */
+					/* Release A27L2 cpu */
 					val = payload_read32(ctx, 0x42001094);
 					val |= (0x1 << 26);
 					payload_write32(ctx, 0x42001094, val);
@@ -1598,7 +1598,7 @@ static int chip_extra(struct xfel_ctx_t * ctx, int argc, char * argv[])
 	printf("    xfel extra efuse read32 <offset>          - Read 32-bits value from efuse\r\n");
 	printf("    xfel extra efuse write32 <offset> <value> - Write 32-bits value to efuse\r\n");
 	printf("    xfel extra efuse write <offset> <file>    - Write file to efuse\r\n");
-	printf("    xfel extra exec riscv <address>           - Boot A27L and jump to address\r\n");
+	printf("    xfel extra exec riscv <address>           - Boot Andes A27L2 and jump to address\r\n");
 	return 0;
 }
 
