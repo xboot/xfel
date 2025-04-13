@@ -2,15 +2,21 @@
 
 uint64_t file_save(const char * filename, void * buf, uint64_t len)
 {
-	FILE * out = fopen(filename, "wb");
+	FILE * out;
 	int r;
+
+	if(strcmp(filename, "-") == 0)
+		out = stdout;
+	else
+		out = fopen(filename, "wb");
 	if(!out)
 	{
 		perror("Failed to open output file");
 		exit(-1);
 	}
 	r = fwrite(buf, len, 1, out);
-	fclose(out);
+	if(out != stdout)
+		fclose(out);
 	return r;
 }
 

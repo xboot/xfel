@@ -2,7 +2,6 @@
 # Top makefile
 #
 
-PREFIX ?= /usr/local
 CROSS		?=
 
 AS			:= $(CROSS)gcc -x assembler-with-cpp
@@ -10,6 +9,8 @@ CC			:= $(CROSS)gcc
 CXX			:= $(CROSS)g++
 LD			:= $(CROSS)ld
 AR			:= $(CROSS)ar
+OC			:= $(CROSS)objcopy
+OD			:= $(CROSS)objdump
 RM			:= rm -fr
 
 ASFLAGS		:= -g -ggdb -Wall -O3
@@ -17,6 +18,8 @@ CFLAGS		:= -g -ggdb -Wall -O3
 CXXFLAGS	:= -g -ggdb -Wall -O3
 LDFLAGS		:= -Wl,-z,relro -Wl,-z,now -Wl,-z,shstk
 ARFLAGS		:= -rcs
+OCFLAGS		:= -v -O binary
+ODFLAGS		:=
 MCFLAGS		:=
 
 LIBDIRS		:=
@@ -24,7 +27,6 @@ LIBS 		:= `pkg-config --libs libusb-1.0`
 
 INCDIRS		:= -I . `pkg-config --cflags libusb-1.0`
 SRCDIRS		:= . chips
-
 
 SFILES		:= $(foreach dir, $(SRCDIRS), $(wildcard $(dir)/*.S))
 CFILES		:= $(foreach dir, $(SRCDIRS), $(wildcard $(dir)/*.c))
@@ -65,14 +67,14 @@ $(CPPOBJS) : %.o : %.cpp
 	@$(CXX) $(CXXFLAGS) -MD -MP -MF $@.d $(INCDIRS) -c $< -o $@
 
 install:
-	install -Dm0755 xfel $(DESTDIR)$(PREFIX)/bin/xfel
-	install -Dm0644 99-xfel.rules $(DESTDIR)/lib/udev/rules.d/99-xfel.rules
-	install -Dm0644 LICENSE $(DESTDIR)$(PREFIX)/share/licenses/xfel/LICENSE
+	install -Dm0755 xfel /usr/local/bin/xfel
+	install -Dm0644 99-xfel.rules /etc/udev/rules.d/99-xfel.rules
+	install -Dm0644 LICENSE /usr/share/licenses/xfel/LICENSE
 
 uninstall:
-	rm -f $(DESTDIR)$(PREFIX)/bin/xfel
-	rm -f $(DESTDIR)/lib/udev/rules.d/99-xfel.rules
-	rm -f $(DESTDIR)$(PREFIX)/share/licenses/xfel/LICENSE
+	rm -f /usr/local/bin/xfel
+	rm -f /etc/udev/rules.d/99-xfel.rules
+	rm -f /usr/share/licenses/xfel/LICENSE
 
 clean:
 	@$(RM) $(DEPS) $(OBJS) $(NAME).exe $(NAME) *~

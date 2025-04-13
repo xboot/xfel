@@ -82,6 +82,7 @@ usage:
 | V3s | Single-core Cortex-A7 | 0x00168100 | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
 | S3 | Single-core Cortex-A7 | 0x00168100 | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
 | V536 | Dual-Core Cortex-A7 | 0x00181600 | ✅ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ |
+| V821 | Andes A272L2 32Bit RISC-V and E907 RISC-V | 0x00188200 | ✅ | ✅ | ✅ | ❌ | ✅ | ❌ | ❌ |
 | V831 | Single-core Cortex-A7 800Mhz | 0x00181700 | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
 | V851 | Single-core Cortex-A7 1Ghz + E907 RISC-V | 0x00188600 | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
 | V853 | Single-core Cortex-A7 1Ghz + E907 RISC-V | 0x00188600 | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
