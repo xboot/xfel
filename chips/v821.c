@@ -70,7 +70,22 @@ static int chip_sid(struct xfel_ctx_t * ctx, char * sid)
 
 static int chip_jtag(struct xfel_ctx_t * ctx)
 {
-	return 0;
+	uint32_t addr;
+	uint32_t val;
+
+	/* Config GPIOC0 and GPIOC5 to jtag mode for andes a27l2 cpu core */
+	addr = 0x42000060 + 0x0;
+	val = payload_read32(ctx, addr);
+	val &= ~(0xf << ((0 & 0x7) << 2));
+	val |= ((0x3 & 0xf) << ((0 & 0x7) << 2));
+	payload_write32(ctx, addr, val);
+
+	val = payload_read32(ctx, addr);
+	val &= ~(0xf << ((5 & 0x7) << 2));
+	val |= ((0x3 & 0xf) << ((5 & 0x7) << 2));
+	payload_write32(ctx, addr, val);
+
+	return 1;
 }
 
 static int chip_ddr(struct xfel_ctx_t * ctx, const char * type)
