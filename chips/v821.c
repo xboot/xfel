@@ -1506,7 +1506,7 @@ static int chip_spi_init(struct xfel_ctx_t * ctx, uint32_t * swapbuf, uint32_t *
 	if(swapbuf)
 		*swapbuf = 0x02002000;
 	if(swaplen)
-		*swaplen = 65536 - 2048;
+		*swaplen = 98304;
 	if(cmdlen)
 		*cmdlen = 4096;
 	return 1;
