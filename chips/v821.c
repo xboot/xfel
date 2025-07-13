@@ -1588,7 +1588,7 @@ static const struct sid_section_t {
 	{ "nv1",                0x00d0,   32 },
 	{ "nv2",                0x00d4,   32 },
 	{ "reserved3",          0x00d8,   96 },
-	{ "oem-program-secure", 0x00e4,  224 },
+	//{ "oem-program-secure", 0x00e4,  224 }, /* Don't support dump, why? */
 };
 
 static int chip_extra(struct xfel_ctx_t * ctx, int argc, char * argv[])
