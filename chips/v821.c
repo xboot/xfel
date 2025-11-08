@@ -58,14 +58,27 @@ static int chip_reset(struct xfel_ctx_t * ctx)
 
 static int chip_sid(struct xfel_ctx_t * ctx, char * sid)
 {
-	uint32_t id[4];
+	uint32_t id[8];
 
 	id[0] = payload_read32(ctx, 0x43006200 + 0x0);
 	id[1] = payload_read32(ctx, 0x43006200 + 0x4);
 	id[2] = payload_read32(ctx, 0x43006200 + 0x8);
 	id[3] = payload_read32(ctx, 0x43006200 + 0xc);
-	sprintf(sid, "%08x%08x%08x%08x", id[0], id[1], id[2], id[3]);
-	return 1;
+
+	id[4] = payload_read32(ctx, 0x43006200 + 0x0);
+	id[5] = payload_read32(ctx, 0x43006200 + 0x4);
+	id[6] = payload_read32(ctx, 0x43006200 + 0x8);
+	id[7] = payload_read32(ctx, 0x43006200 + 0xc);
+
+	if((id[0] != 0) || (id[1] != 0) || (id[2] != 0) || (id[3] != 0))
+	{
+		if((id[0] == id[4]) && (id[1] == id[5]) && (id[2] == id[6]) && (id[3] == id[7]))
+		{
+			sprintf(sid, "%08x%08x%08x%08x", id[0], id[1], id[2], id[3]);
+			return 1;
+		}
+	}
+	return 0;
 }
 
 static int chip_jtag(struct xfel_ctx_t * ctx)
