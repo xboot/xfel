@@ -43,6 +43,7 @@ static const struct spinand_info_t spinand_infos[] = {
 	/* Winbond */
 	{ "W25N512GV",       SPINAND_ID(0xef, 0xaa, 0x20), 2048,  64,  64,  512, 1, 1 },
 	{ "W25N01GV",        SPINAND_ID(0xef, 0xaa, 0x21), 2048,  64,  64, 1024, 1, 1 },
+	{ "W25N01KV",        SPINAND_ID(0xef, 0xae, 0x21), 2048, 128,  64, 1024, 1, 1 },
 	{ "W25M02GV",        SPINAND_ID(0xef, 0xab, 0x21), 2048,  64,  64, 1024, 1, 2 },
 	{ "W25N02KV",        SPINAND_ID(0xef, 0xaa, 0x22), 2048, 128,  64, 2048, 1, 1 },
 
