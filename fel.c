@@ -1,4 +1,5 @@
 #include <fel.h>
+#include <usb.h>
 
 extern struct chip_t a10;
 extern struct chip_t a13_a10s_r8;
@@ -69,92 +70,12 @@ static struct chip_t * chips[] = {
 	&h135,
 };
 
-struct usb_request_t {
-	char magic[8];
-	uint32_t length;
-	uint32_t unknown1;
-	uint16_t request;
-	uint32_t length2;
-	char pad[10];
-} __attribute__((packed));
-
 struct fel_request_t {
 	uint32_t request;
 	uint32_t address;
 	uint32_t length;
 	uint32_t pad;
 } __attribute__((packed));
-
-static inline void usb_bulk_send(libusb_device_handle * hdl, int ep, const char * buf, size_t len)
-{
-	size_t max_chunk = 128 * 1024;
-	size_t chunk;
-	int r, bytes;
-
-	while(len > 0)
-	{
-		chunk = len < max_chunk ? len : max_chunk;
-		r = libusb_bulk_transfer(hdl, ep, (void *)buf, chunk, &bytes, 10000);
-		if(r != 0)
-		{
-			printf("usb bulk send error\r\n");
-			exit(-1);
-		}
-		len -= bytes;
-		buf += bytes;
-	}
-}
-
-static inline void usb_bulk_recv(libusb_device_handle * hdl, int ep, char * buf, size_t len)
-{
-	int r, bytes;
-
-	while(len > 0)
-	{
-		r = libusb_bulk_transfer(hdl, ep, (void *)buf, len, &bytes, 10000);
-		if(r != 0)
-		{
-			printf("usb bulk recv error\r\n");
-			exit(-1);
-		}
-		len -= bytes;
-		buf += bytes;
-	}
-}
-
-static inline void send_usb_request(struct xfel_ctx_t * ctx, int type, size_t length)
-{
-	struct usb_request_t req = {
-		.magic = "AWUC",
-		.request = cpu_to_le16(type),
-		.length = cpu_to_le32(length),
-		.unknown1 = cpu_to_le32(0x0c000000)
-	};
-	req.length2 = req.length;
-	usb_bulk_send(ctx->hdl, ctx->epout, (const char *)&req, sizeof(struct usb_request_t));
-}
-
-static inline void read_usb_response(struct xfel_ctx_t * ctx)
-{
-	char buf[13];
-
-	usb_bulk_recv(ctx->hdl, ctx->epin, (char *)buf, sizeof(buf));
-	assert(strcmp(buf, "AWUS") == 0);
-}
-
-static inline void usb_write(struct xfel_ctx_t * ctx, const void * buf, size_t len)
-{
-	send_usb_request(ctx, 0x12, len);
-	usb_bulk_send(ctx->hdl, ctx->epout, (const char *)buf, len);
-	read_usb_response(ctx);
-}
-
-static inline void usb_read(struct xfel_ctx_t * ctx, const void * data, size_t len)
-{
-	send_usb_request(ctx, 0x11, len);
-	usb_bulk_send(ctx->hdl, ctx->epin, (const char *)data, len);
-	read_usb_response(ctx);
-}
 
 static inline void send_fel_request(struct xfel_ctx_t * ctx, int type, uint32_t addr, uint32_t length)
 {
@@ -195,43 +116,9 @@ static inline int fel_version(struct xfel_ctx_t * ctx)
 
 int fel_init(struct xfel_ctx_t * ctx)
 {
-	if(ctx && ctx->hdl)
+	if(usb_init(ctx))
 	{
-		struct libusb_config_descriptor * config;
-		int if_idx, set_idx, ep_idx;
-		const struct libusb_interface * iface;
-		const struct libusb_interface_descriptor * setting;
-		const struct libusb_endpoint_descriptor * ep;
-
-		if(libusb_kernel_driver_active(ctx->hdl, 0))
-			libusb_detach_kernel_driver(ctx->hdl, 0);
-
-		if(libusb_claim_interface(ctx->hdl, 0) == 0)
-		{
-			if(libusb_get_active_config_descriptor(libusb_get_device(ctx->hdl), &config) == 0)
-			{
-				for(if_idx = 0; if_idx < config->bNumInterfaces; if_idx++)
-				{
-					iface = config->interface + if_idx;
-					for(set_idx = 0; set_idx < iface->num_altsetting; set_idx++)
-					{
-						setting = iface->altsetting + set_idx;
-						for(ep_idx = 0; ep_idx < setting->bNumEndpoints; ep_idx++)
-						{
-							ep = setting->endpoint + ep_idx;
-							if((ep->bmAttributes & LIBUSB_TRANSFER_TYPE_MASK) != LIBUSB_TRANSFER_TYPE_BULK)
-								continue;
-							if((ep->bEndpointAddress & LIBUSB_ENDPOINT_DIR_MASK) == LIBUSB_ENDPOINT_IN)
-								ctx->epin = ep->bEndpointAddress;
-							else
-								ctx->epout = ep->bEndpointAddress;
-						}
-					}
-				}
-				libusb_free_config_descriptor(config);
-				return fel_version(ctx);
-			}
-		}
+		return fel_version(ctx);
 	}
 	return 0;
 }

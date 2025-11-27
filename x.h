@@ -31,7 +31,6 @@ extern "C" {
 #include <ctype.h>
 #include <assert.h>
 #include <unistd.h>
-#include <libusb.h>
 
 /*
  * byteorder
