@@ -3,7 +3,7 @@
 #include <ecdsa256.h>
 #include <spinor.h>
 #include <spinand.h>
-#include <libusb.h>
+#include <usb.h>
 
 static void usage(void)
 {
@@ -52,30 +52,16 @@ int main(int argc, char * argv[])
 		}
 	}
 
-	libusb_device ** list = NULL;
-	libusb_context * context = NULL;
-	libusb_init(&context);
-	int count = libusb_get_device_list(context, &list);
-	for(int i = 0; i < count; i++)
+	if(!usb_open(&ctx))
 	{
-		libusb_device * device = list[i];
-		struct libusb_device_descriptor desc;
-		if(libusb_get_device_descriptor(device, &desc) != 0)
-			printf("ERROR: Can't get device list\r\n");
-		if((desc.idVendor == 0x1f3a) && (desc.idProduct == 0xefe8))
-		{
-			if(libusb_open(device, &ctx.hdl) != 0)
-				printf("ERROR: Can't connect to device\r\n");
-			break;
-		}
+		printf("ERROR: Can't connect to device\r\n");
+		return -1;
 	}
 
 	if(!fel_init(&ctx))
 	{
 		printf("ERROR: No FEL device found!\r\n");
-		if(ctx.hdl)
-			libusb_close(ctx.hdl);
-		libusb_exit(NULL);
+		usb_close(&ctx);
 		return -1;
 	}
 	if(!strcmp(argv[1], "version"))
@@ -433,9 +419,7 @@ int main(int argc, char * argv[])
 	}
 	else
 		usage();
-	if(ctx.hdl)
-		libusb_close(ctx.hdl);
-	libusb_exit(NULL);
+	usb_close(&ctx);
 
 	return 0;
 }

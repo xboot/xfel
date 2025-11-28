@@ -13,7 +13,8 @@ struct xfel_ctx_t;
 struct chip_t;
 
 struct xfel_ctx_t {
-	libusb_device_handle * hdl;
+	void *hdl;
+	char *dev_name;
 	int epout;
 	int epin;
 	struct {

@@ -3,6 +3,7 @@
 #
 
 CROSS		?=
+USB			?= libusb
 
 AS			:= $(CROSS)gcc -x assembler-with-cpp
 CC			:= $(CROSS)gcc
@@ -23,10 +24,15 @@ ODFLAGS		:=
 MCFLAGS		:=
 
 LIBDIRS		:=
-LIBS 		:= `pkg-config --libs libusb-1.0`
-
-INCDIRS		:= -I . `pkg-config --cflags libusb-1.0`
-SRCDIRS		:= . chips
+ifeq ($(USB), winusb)
+CFLAGS		+= -D_WIN32 -DUSE_WINUSB_DRV
+LIBS 		:= -lsetupapi -lhid -lwinusb
+INCDIRS		:= -I .
+else
+LIBS 		:= -lusb-1.0
+INCDIRS		:= -I . -I /usr/include/libusb-1.0
+endif
+SRCDIRS		:= . chips usb
 
 SFILES		:= $(foreach dir, $(SRCDIRS), $(wildcard $(dir)/*.S))
 CFILES		:= $(foreach dir, $(SRCDIRS), $(wildcard $(dir)/*.c))
