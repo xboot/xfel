@@ -123,7 +123,7 @@ And build libusb for cross-compilation.
 git clone https://github.com/libusb/libusb.git
 cd libusb
 ./autogen.sh
-./configure --host=i686-w64-mingw32 --prefix=/usr/i686-w64-mingw32/
+./configure --host=x86_64-w64-mingw32 --prefix=/usr/x86_64-w64-mingw32/
 make
 sudo make install
 ```
@@ -132,10 +132,10 @@ Build xfel source code
 
 ```shell
 cd xfel
-CROSS=i686-w64-mingw32- make
+CROSS=x86_64-w64-mingw32- make
 ```
 
-For 64-bits windows, you can using `x86_64-w64-mingw32-` instead of `i686-w64-mingw32` above.
+For 32-bits windows, you can using `i686-w64-mingw32-` instead of `x86_64-w64-mingw32` above.
 
 ## macOS platform
 
