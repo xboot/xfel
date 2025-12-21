@@ -124,7 +124,7 @@ sudo apt install libtool-bin
 git clone https://github.com/libusb/libusb.git
 cd libusb
 ./autogen.sh
-./configure --host=i686-w64-mingw32 --prefix=/usr/i686-w64-mingw32/
+./configure --host=x86_64-w64-mingw32 --prefix=/usr/x86_64-w64-mingw32/
 make
 sudo make install
 ```
@@ -133,10 +133,10 @@ sudo make install
 
 ```shell
 cd xfel
-CROSS=i686-w64-mingw32- make
+CROSS=x86_64-w64-mingw32- make
 ```
 
-对于交叉编译64位Windows程序，您可以使用 `x86_64-w64-mingw32-` 代替上面的 `i686-w64-mingw32`。
+对于交叉编译32位Windows程序，您可以使用 `i686-w64-mingw32-` 代替上面的 `x86_64-w64-mingw32`。
 
 
 ## macOS

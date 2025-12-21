@@ -1,3 +1,5 @@
+#include <sha256.h>
+#include <ecdsa256.h>
 #include <fel.h>
 
 static int chip_detect(struct xfel_ctx_t * ctx, uint32_t id)
@@ -1732,13 +1734,101 @@ static int chip_extra(struct xfel_ctx_t * ctx, int argc, char * argv[])
 				}
 			}
 		}
+		else if(!strcmp(argv[0], "sign"))
+		{
+			argc -= 1;
+			argv += 1;
+			if(argc > 0)
+			{
+				if(argc == 3)
+				{
+					uint8_t public_key[33] = {
+						0x03, 0xcf, 0xd1, 0x8e, 0x4a, 0x4b, 0x40, 0xd6,
+						0x52, 0x94, 0x48, 0xaa, 0x2d, 0xf8, 0xbb, 0xb6,
+						0x77, 0x12, 0x82, 0x58, 0xb8, 0xfb, 0xfc, 0x5b,
+						0x9e, 0x49, 0x2f, 0xbb, 0xba, 0x4e, 0x84, 0x83,
+						0x2f,
+					};
+					uint8_t private_key[32] = {
+						0xdc, 0x57, 0xb8, 0xa9, 0xe0, 0xe2, 0xb7, 0xf8,
+						0xb4, 0xc9, 0x29, 0xbd, 0x8d, 0xb2, 0x84, 0x4e,
+						0x53, 0xf0, 0x1f, 0x17, 0x1b, 0xbc, 0xdf, 0x6e,
+						0x62, 0x89, 0x08, 0xdb, 0xf2, 0xb2, 0xe6, 0xa9,
+					};
+					char * p = argv[0];
+					if(p && (strcmp(p, "") != 0) && (strlen(p) == sizeof(public_key) * 2))
+					{
+						for(int i = 0; i < sizeof(public_key); i++)
+							public_key[i] = hex_string(p, i * 2);
+					}
+					char * q = argv[1];
+					if(q && (strcmp(q, "") != 0) && (strlen(q) == sizeof(private_key) * 2))
+					{
+						for(int i = 0; i < sizeof(private_key); i++)
+							private_key[i] = hex_string(q, i * 2);
+					}
+					uint32_t offset = strtoul(argv[2], NULL, 0);
+					char sid[256];
+					uint8_t sha256[32];
+					uint32_t signature[16];
+					uint32_t efuse[16];
+					if(chip_sid(ctx, sid))
+					{
+						sha256_hash(sid, strlen(sid), sha256);
+						ecdsa256_sign(private_key, sha256, (uint8_t *)&signature[0]);
+						int allzero = 1;
+						for(int i = 0; i < 16; i++)
+						{
+							efuse[i] = efuse_read(ctx, offset + i * 4);
+							if(efuse[i] != 0x00000000)
+								allzero = 0;
+						}
+						if(allzero)
+						{
+							for(int i = 0; i < 16; i++)
+								efuse_write(ctx, offset + i * 4, signature[i]);
+							printf("Unique ID:\r\n\t");
+							printf("%s\r\n", sid);
+							printf("Sha256 digest:\r\n\t");
+							for(int i = 0; i < sizeof(sha256); i++)
+								printf("%02x", sha256[i]);
+							printf("\r\n");
+							printf("Ecdsa256 public key:\r\n\t");
+							for(int i = 0; i < sizeof(public_key); i++)
+								printf("%02x", public_key[i]);
+							printf("\r\n");
+							printf("Ecdsa256 private key:\r\n\t");
+							for(int i = 0; i < sizeof(private_key); i++)
+								printf("%02x", private_key[i]);
+							printf("\r\n");
+							printf("Ecdsa256 signature:\r\n\t");
+							uint8_t * p = (uint8_t *)&signature[0];
+							for(int i = 0; i < sizeof(signature); i++)
+								printf("%02x", p[i]);
+							printf("\r\n");
+						}
+						else
+						{
+							if(memcmp(&signature[0], &efuse[0], 64) == 0)
+								printf("The chip has been signature and verify successed!\r\n");
+							else
+								printf("The chip has been signature but verify fail!\r\n");
+						}
+					}
+					else
+						printf("Can't read chip sid\r\n");
+					return 1;
+				}
+			}
+		}
 	}
 	printf("usage:\r\n");
-	printf("    xfel extra efuse dump                     - Dump all of the efuse information\r\n");
-	printf("    xfel extra efuse read32 <offset>          - Read 32-bits value from efuse\r\n");
-	printf("    xfel extra efuse write32 <offset> <value> - Write 32-bits value to efuse\r\n");
-	printf("    xfel extra efuse write <offset> <file>    - Write file to efuse\r\n");
-	printf("    xfel extra exec riscv <address>           - Boot Andes A27L2 and jump to address\r\n");
+	printf("    xfel extra efuse dump                                     - Dump all of the efuse information\r\n");
+	printf("    xfel extra efuse read32 <offset>                          - Read 32-bits value from efuse\r\n");
+	printf("    xfel extra efuse write32 <offset> <value>                 - Write 32-bits value to efuse\r\n");
+	printf("    xfel extra efuse write <offset> <file>                    - Write file to efuse\r\n");
+	printf("    xfel extra exec riscv <address>                           - Boot Andes A27L2 and jump to address\r\n");
+	printf("    xfel extra sign <public-key> <private-key> <efuse-offset> - Generate signature of sid and write to efuse\r\n");
 	return 0;
 }
 
