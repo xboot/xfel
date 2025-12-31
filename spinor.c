@@ -679,9 +679,9 @@ static void spinor_helper_erase(struct xfel_ctx_t * ctx, struct spinor_pdata_t *
 		esize = 4096;
 	else if(pdat->info.opcode_erase_32k != 0)
 		esize = 32768;
-	else if(pdat->info.opcode_erase_32k != 0)
+	else if(pdat->info.opcode_erase_64k != 0)
 		esize = 65536;
-	else if(pdat->info.opcode_erase_32k != 0)
+	else if(pdat->info.opcode_erase_256k != 0)
 		esize = 262144;
 	else
 		return;
@@ -871,9 +871,9 @@ int spinor_erase(struct xfel_ctx_t * ctx, uint64_t addr, uint64_t len)
 			esize = 4096;
 		else if(pdat.info.opcode_erase_32k != 0)
 			esize = 32768;
-		else if(pdat.info.opcode_erase_32k != 0)
+		else if(pdat.info.opcode_erase_64k != 0)
 			esize = 65536;
-		else if(pdat.info.opcode_erase_32k != 0)
+		else if(pdat.info.opcode_erase_256k != 0)
 			esize = 262144;
 		else
 			return 0;
@@ -934,9 +934,9 @@ int spinor_write(struct xfel_ctx_t * ctx, uint64_t addr, void * buf, uint64_t le
 			esize = 4096;
 		else if(pdat.info.opcode_erase_32k != 0)
 			esize = 32768;
-		else if(pdat.info.opcode_erase_32k != 0)
+		else if(pdat.info.opcode_erase_64k != 0)
 			esize = 65536;
-		else if(pdat.info.opcode_erase_32k != 0)
+		else if(pdat.info.opcode_erase_256k != 0)
 			esize = 262144;
 		else
 			return 0;
