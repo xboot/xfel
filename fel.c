@@ -32,6 +32,7 @@ extern struct chip_t a733;
 extern struct chip_t t536;
 extern struct chip_t a537_a333;
 extern struct chip_t h135;
+extern struct chip_t t153;
 
 
 static struct chip_t * chips[] = {
@@ -67,6 +68,7 @@ static struct chip_t * chips[] = {
 	&t536,
 	&a537_a333,
 	&h135,
+	&t153,
 };
 
 struct usb_request_t {

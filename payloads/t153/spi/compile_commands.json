@@ -1,0 +1,34 @@
+[
+  {
+    "file": "source/sys-spi.c",
+    "arguments": [
+      "/home/imi415/Documents/Hardwares/Toolchains/arm-none-linux-gnueabihf/bin/arm-none-linux-gnueabihf-gcc",
+      "-march=armv7-a",
+      "-mtune=cortex-a7",
+      "-mfpu=vfpv4",
+      "-mfloat-abi=hard",
+      "-marm",
+      "-mno-thumb-interwork",
+      "-mno-unaligned-access",
+      "-fno-stack-protector",
+      "-g",
+      "-ggdb",
+      "-Wall",
+      "-O3",
+      "-MD",
+      "-MP",
+      "-MF",
+      ".obj/source/sys-spi.o.d",
+      "-I",
+      "include",
+      "-I",
+      "include/external",
+      "-c",
+      "source/sys-spi.c",
+      "-o",
+      ".obj/source/sys-spi.o"
+    ],
+    "directory": "/home/imi415/Documents/Hardwares/Common_Projects/xfel/payloads/t153/spi",
+    "output": ".obj/source/sys-spi.o"
+  }
+]
