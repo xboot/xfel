@@ -7,6 +7,7 @@ struct spinor_info_t {
 	uint32_t blksz;
 	uint32_t read_granularity;
 	uint32_t write_granularity;
+	uint32_t write_pagesz;
 	uint8_t address_length;
 	uint8_t opcode_read;
 	uint8_t opcode_write;
@@ -70,10 +71,11 @@ struct sfdp_t {
 };
 
 static const struct spinor_info_t spinor_infos[] = {
-	{ "W25X40",       0xef3013,       512 * 1024, 4096, 1, 256, 3, OPCODE_READ, OPCODE_PROG, OPCODE_WREN, OPCODE_E4K,           0, OPCODE_E64K, 0 },
-	{ "W25Q128JVEIQ", 0xefc018, 16 * 1024 * 1024, 4096, 1, 256, 3, OPCODE_READ, OPCODE_PROG, OPCODE_WREN, OPCODE_E4K, OPCODE_E32K, OPCODE_E64K, 0 },
-	{ "W25Q256JVEIQ", 0xef4019, 32 * 1024 * 1024, 4096, 1, 256, 4, OPCODE_READ, OPCODE_PROG, OPCODE_WREN, OPCODE_E4K, OPCODE_E32K, OPCODE_E64K, 0 },
-	{ "GD25D10B",     0xc84011,       128 * 1024, 4096, 1, 256, 3, OPCODE_READ, OPCODE_PROG, OPCODE_WREN, OPCODE_E4K, OPCODE_E32K, OPCODE_E64K, 0 },
+	{ "W25X40",       0xef3013,       512 * 1024, 4096, 1, 256, 256, 3, OPCODE_READ, OPCODE_PROG, OPCODE_WREN, OPCODE_E4K,           0, OPCODE_E64K, 0 },
+	{ "SST25VF016B",  0xbf2541,  2 * 1024 * 1024, 4096, 1,   1,   1, 3,	OPCODE_READ, OPCODE_PROG, OPCODE_WREN, OPCODE_E4K, OPCODE_E32K,	OPCODE_E64K, 0 },
+	{ "W25Q128JVEIQ", 0xefc018, 16 * 1024 * 1024, 4096, 1, 256, 256, 3, OPCODE_READ, OPCODE_PROG, OPCODE_WREN, OPCODE_E4K, OPCODE_E32K, OPCODE_E64K, 0 },
+	{ "W25Q256JVEIQ", 0xef4019, 32 * 1024 * 1024, 4096, 1, 256, 256, 4, OPCODE_READ, OPCODE_PROG, OPCODE_WREN, OPCODE_E4K, OPCODE_E32K, OPCODE_E64K, 0 },
+	{ "GD25D10B",     0xc84011,       128 * 1024, 4096, 1, 256, 256, 3, OPCODE_READ, OPCODE_PROG, OPCODE_WREN, OPCODE_E4K, OPCODE_E32K, OPCODE_E64K, 0 },
 };
 
 static inline int spinor_read_sfdp(struct xfel_ctx_t * ctx, uint32_t swapbuf, uint32_t swaplen, uint32_t cmdlen, struct sfdp_t * sfdp)
@@ -255,6 +257,7 @@ static inline int spinor_info(struct xfel_ctx_t * ctx, struct spinor_pdata_t * p
 		pdat->info.opcode_write_enable = OPCODE_WREN;
 		pdat->info.read_granularity = 1;
 		pdat->info.opcode_read = OPCODE_READ;
+		pdat->info.write_pagesz = 256;
 		if((sfdp.bt.major == 1) && (sfdp.bt.minor < 5))
 		{
 			/* Basic flash parameter table 1th dword */
@@ -269,6 +272,7 @@ static inline int spinor_info(struct xfel_ctx_t * ctx, struct spinor_pdata_t * p
 			/* Basic flash parameter table 11th dword */
 			v = (sfdp.bt.table[43] << 24) | (sfdp.bt.table[42] << 16) | (sfdp.bt.table[41] << 8) | (sfdp.bt.table[40] << 0);
 			pdat->info.write_granularity = 1 << ((v >> 4) & 0xf);
+			pdat->info.write_pagesz = pdat->info.write_granularity;
 		}
 		pdat->info.opcode_write = OPCODE_PROG;
 		return 1;
@@ -679,9 +683,9 @@ static void spinor_helper_erase(struct xfel_ctx_t * ctx, struct spinor_pdata_t *
 		esize = 4096;
 	else if(pdat->info.opcode_erase_32k != 0)
 		esize = 32768;
-	else if(pdat->info.opcode_erase_32k != 0)
+	else if(pdat->info.opcode_erase_64k != 0)
 		esize = 65536;
-	else if(pdat->info.opcode_erase_32k != 0)
+	else if(pdat->info.opcode_erase_256k != 0)
 		esize = 262144;
 	else
 		return;
@@ -730,6 +734,8 @@ static void spinor_helper_write(struct xfel_ctx_t * ctx, struct spinor_pdata_t *
 		granularity = (count < 0x40000000) ? count : 0x40000000;
 	else
 		granularity = pdat->info.write_granularity;
+	if(pdat->info.write_pagesz > 0)
+		granularity = granularity > (int32_t)pdat->info.write_pagesz ? (int32_t)pdat->info.write_pagesz : granularity;
 	granularity = granularity > (pdat->swaplen - 5) ? (pdat->swaplen - 5) : granularity;
 
 	switch(pdat->info.address_length)
@@ -871,9 +877,9 @@ int spinor_erase(struct xfel_ctx_t * ctx, uint64_t addr, uint64_t len)
 			esize = 4096;
 		else if(pdat.info.opcode_erase_32k != 0)
 			esize = 32768;
-		else if(pdat.info.opcode_erase_32k != 0)
+		else if(pdat.info.opcode_erase_64k != 0)
 			esize = 65536;
-		else if(pdat.info.opcode_erase_32k != 0)
+		else if(pdat.info.opcode_erase_256k != 0)
 			esize = 262144;
 		else
 			return 0;
@@ -927,16 +933,27 @@ int spinor_write(struct xfel_ctx_t * ctx, uint64_t addr, void * buf, uint64_t le
 	uint64_t base, n;
 	int64_t cnt;
 	uint32_t esize, emask;
+	uint64_t waddr, wlen;
+	uint8_t * wbuf;
+	uint8_t * vbuf;
+	uint8_t * expbuf;
+	uint64_t vbase, vcnt;
+	uint64_t start, end;
+	uint32_t i;
+	int attempt;
 
 	if(spinor_helper_init(ctx, &pdat))
 	{
+		waddr = addr;
+		wlen = len;
+		wbuf = buf;
 		if(pdat.info.opcode_erase_4k != 0)
 			esize = 4096;
 		else if(pdat.info.opcode_erase_32k != 0)
 			esize = 32768;
-		else if(pdat.info.opcode_erase_32k != 0)
+		else if(pdat.info.opcode_erase_64k != 0)
 			esize = 65536;
-		else if(pdat.info.opcode_erase_32k != 0)
+		else if(pdat.info.opcode_erase_256k != 0)
 			esize = 262144;
 		else
 			return 0;
@@ -955,6 +972,16 @@ int spinor_write(struct xfel_ctx_t * ctx, uint64_t addr, void * buf, uint64_t le
 		}
 		base = addr;
 		cnt = len;
+		vbuf = malloc(esize);
+		expbuf = malloc(esize);
+		if(!vbuf || !expbuf)
+		{
+			if(vbuf)
+				free(vbuf);
+			if(expbuf)
+				free(expbuf);
+			return 0;
+		}
 		progress_start(&p, cnt);
 		while(cnt > 0)
 		{
@@ -966,6 +993,70 @@ int spinor_write(struct xfel_ctx_t * ctx, uint64_t addr, void * buf, uint64_t le
 			progress_update(&p, n);
 		}
 		progress_stop(&p);
+		vbase = waddr & ~emask;
+		vcnt = (waddr & emask) + wlen;
+		vcnt = (vcnt + ((vcnt & emask) ? esize : 0)) & ~emask;
+		while(vcnt > 0)
+		{
+			memset(expbuf, 0xff, esize);
+			start = vbase > waddr ? vbase : waddr;
+			end = (vbase + esize) < (waddr + wlen) ? (vbase + esize) : (waddr + wlen);
+			if(start < end)
+				memcpy(expbuf + (start - vbase), wbuf + (start - waddr), end - start);
+			for(attempt = 0; attempt < 3; attempt++)
+			{
+				int need_erase = 0;
+				int need_prog = 0;
+				spinor_helper_read(ctx, &pdat, vbase, vbuf, esize);
+				for(i = 0; i < esize; i++)
+				{
+					uint8_t exp = expbuf[i];
+					uint8_t got = vbuf[i];
+					if((exp & ~got) != 0)
+						need_erase = 1;
+					if((~exp & got) != 0)
+						need_prog = 1;
+					if(need_erase && need_prog)
+						break;
+				}
+				if(!need_erase && !need_prog)
+					break;
+				printf("spinor: verify mismatch at 0x%llx (attempt %d), %s%s\r\n",
+					(unsigned long long)vbase, attempt + 1,
+					need_erase ? "need-erase" : "",
+					need_prog ? (need_erase ? "+need-prog" : "need-prog") : "");
+				if(need_erase)
+				{
+					uint64_t off;
+					spinor_helper_erase(ctx, &pdat, vbase, esize);
+					for(off = 0; off < esize; off += n)
+					{
+						n = (esize - off) > 65536 ? 65536 : (esize - off);
+						spinor_helper_write(ctx, &pdat, vbase + off, expbuf + off, n);
+					}
+				}
+				else if(need_prog)
+				{
+					for(i = 0; i < esize; i++)
+					{
+						if(vbuf[i] != expbuf[i])
+							spinor_helper_write(ctx, &pdat, vbase + i, expbuf + i, 1);
+					}
+				}
+			}
+			if(attempt == 3)
+			{
+				printf("spinor: verify failed at 0x%llx after retries\r\n",
+					(unsigned long long)vbase);
+				free(vbuf);
+				free(expbuf);
+				return 0;
+			}
+			vbase += esize;
+			vcnt -= esize;
+		}
+		free(vbuf);
+		free(expbuf);
 		return 1;
 	}
 	return 0;
