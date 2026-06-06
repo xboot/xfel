@@ -36,6 +36,17 @@ extern "C" {
 /*
  * byteorder
  */
+#if defined __has_builtin
+#if __has_builtin(__builtin_bswap16) && __has_builtin(__builtin_bswap32) && __has_builtin(__builtin_bswap64)
+#define HAS_BUILTIN_BSWAP
+#endif
+#endif
+#ifdef HAS_BUILTIN_BSWAP
+/* Use the GCC builtins which can work in initializers. */
+#define __swab16 __builtin_bswap16
+#define __swab32 __builtin_bswap32
+#define __swab64 __builtin_bswap64
+#else
 static inline uint16_t __swab16(uint16_t x)
 {
 	return ((x << 8) | ( x>> 8));
@@ -58,6 +69,7 @@ static inline uint64_t __swab64(uint64_t x)
 		((x & (uint64_t)0x0000ff0000000000ULL)>>24) | \
 		((x & (uint64_t)0x00ff000000000000ULL)>>40));
 }
+#endif
 
 static inline uint32_t __swahw32(uint32_t x)
 {
