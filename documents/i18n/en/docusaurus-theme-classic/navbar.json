@@ -1,0 +1,22 @@
+{
+  "title": {
+    "message": "XFEL",
+    "description": "The title in the navbar"
+  },
+  "item.label.入门指南": {
+    "message": "Guide",
+    "description": "Navbar item with label 入门指南"
+  },
+  "item.label.命令参考": {
+    "message": "Commands",
+    "description": "Navbar item with label 命令参考"
+  },
+  "item.label.使用示例": {
+    "message": "Examples",
+    "description": "Navbar item with label 使用示例"
+  },
+  "item.label.参考列表": {
+    "message": "Reference",
+    "description": "Navbar item with label 参考列表"
+  }
+}

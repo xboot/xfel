@@ -4,9 +4,9 @@
 # XFEL
 Tiny FEL tools for allwinner SOC.
 
-[Documentation](https://xboot.github.io/xfel) &mdash;
-[Support Lists](https://xboot.github.io/xfel#/?id=support-lists) &mdash;
-[Examples](https://xboot.github.io/xfel#/?id=examples) &mdash;
+[Documentation](https://xfel.xboot.org) &mdash;
+[Support Lists](https://xfel.xboot.org/reference/support-list) &mdash;
+[Examples](https://xfel.xboot.org/examples/f1c100s-uboot) &mdash;
 [Releases](https://github.com/xboot/xfel/releases/)
 
 ## Usage
