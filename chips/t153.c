@@ -4405,14 +4405,7 @@ static int chip_spi_run(struct xfel_ctx_t * ctx, uint8_t * cbuf, uint32_t clen)
 
 static int chip_extra(struct xfel_ctx_t * ctx, int argc, char * argv[])
 {
-	if (argc > 0) {
-
-	}
-	printf("usage:\r\n");
-	printf("    xfel extra efuse dump                     - Dump all of the efuse information\r\n");
-	printf("    xfel extra efuse read32 <offset>          - Read 32-bits value from efuse\r\n");
-	printf("    xfel extra efuse write32 <offset> <value> - Write 32-bits value to efuse\r\n");
-	printf("    xfel extra efuse write <offset> <file>    - Write file to efuse\r\n");
+	return 0;
 }
 
 struct chip_t t153 = {
