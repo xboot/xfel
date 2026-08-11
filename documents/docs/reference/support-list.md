@@ -42,7 +42,7 @@
 | R528 | Dual-Core Cortex-A7 | 0x00185900 | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
 | S3 | Single-core Cortex-A7 | 0x00168100 | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
 | T113 | Dual-Core Cortex-A7 | 0x00185900 | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
-| T153 | Quad-Core Cortex-A7 + E907 RISC-V | 0x00192200 | ✅ | ✅ | ❌ | ✅ | ✅ | ✅ | ✅ |
+| T153 | Quad-Core Cortex-A7 + E907 RISC-V | 0x00192200 | ✅ | ✅ | ✅ | ❌ | ✅ | ✅ | ✅ |
 | T507 | Quad-Core ARM Cortex-A53 | 0x00182300 | ✅ | ❌ | ❌ | ❌ | ✅ | ❌ | ❌ |
 | T527 | Octa-core Cortex-A55 2.0Ghz + E906 RISC-V + HIFI4 DSP | 0x00189000 | ✅ | ✅ | ✅ | ❌ | ✅ | ❌ | ❌ |
 | V3s | Single-core Cortex-A7 | 0x00168100 | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
