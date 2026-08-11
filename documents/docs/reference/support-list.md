@@ -51,6 +51,7 @@
 | V831 | Single-core Cortex-A7 800Mhz | 0x00181700 | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
 | V851 | Single-core Cortex-A7 1Ghz + E907 RISC-V | 0x00188600 | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
 | V853 | Single-core Cortex-A7 1Ghz + E907 RISC-V | 0x00188600 | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
+| V881 | Dual-Core RISC-V XuanTie C907, up to 1.4GHz | 0x00191800 | ✅ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ |
 
 ## 字段说明
 
