@@ -13,6 +13,7 @@
 | A33 | Quad-Core ARM Cortex-A7 @ 1.2GHz | 0x00166700 | ✓ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ |
 | A40i | Quad-Core ARM Cortex-A7 @ 1.2 GHz | 0x00170100 | ✓ | ✓ | ✓ | ✗ | ✓ | ✗ | ✗ |
 | A50 | Quad-Core ARM Cortex-A7 @ 1.8GHz | 0x00175500 | ✓ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ |
+| A63 | Quad-Core ARM Cortex-A53 | 0x00171900 | ✓ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ |
 | A64 | Quad-Core ARM Cortex-A53 | 0x00168900 | ✓ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ |
 | A80 | Octa-core big.LITTLE Cortex-A15/7 | 0x00163900 | ✓ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ |
 | A83T | Octa-core Cortex-A7 @ 1.6GHz | 0x00167300 | ✓ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ |
@@ -46,7 +47,9 @@
 | T153 | Quad-Core Cortex-A7 + E907 RISC-V | 0x00192200 | ✓ | ✓ | ✓ | ✗ | ✓ | ✓ | ✓ |
 | T507 | Quad-Core ARM Cortex-A53 | 0x00182300 | ✓ | ✗ | ✗ | ✗ | ✓ | ✗ | ✗ |
 | T527 | Octa-core Cortex-A55 2.0Ghz + E906 RISC-V + HIFI4 DSP | 0x00189000 | ✓ | ✓ | ✓ | ✗ | ✓ | ✗ | ✗ |
+| T736 | Dual-Core Arm Cortex-A76 + Hexa-Core Arm Cortex-A55 | 0x00170800 | ✓ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ |
 | V3s | Single-core Cortex-A7 | 0x00168100 | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ |
+| V5 | Quad-Core ARM Cortex-A7 | 0x00172100 | ✓ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ |
 | V536 | Dual-Core Cortex-A7 | 0x00181600 | ✓ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ |
 | V821 | Andes A272L2 32Bit RISC-V and E907 RISC-V | 0x00188200 | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ |
 | V831 | Single-core Cortex-A7 800Mhz | 0x00181700 | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ |
