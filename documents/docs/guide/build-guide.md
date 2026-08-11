@@ -26,9 +26,39 @@ make
 sudo make install
 ```
 
-编译完成后会生成 `xfel` 可执行文件，`make install` 会将其安装到系统路径（默认 `/usr/local/bin`）。
+编译完成后会生成 `xfel` 可执行文件。`make install` 会安装以下文件：
+
+| 文件 | 默认路径 |
+| --- | --- |
+| `xfel` 可执行文件 | `/usr/local/bin/xfel` |
+| udev 规则 `99-xfel.rules` | `/etc/udev/rules.d/99-xfel.rules` |
+| 许可证 `LICENSE` | `/usr/local/share/licenses/xfel/LICENSE` |
+
+### 自定义安装路径
+
+安装路径通过以下变量控制（均可在命令行覆盖）：
+
+| 变量 | 默认值 | 说明 |
+| --- | --- | --- |
+| `PREFIX` | `/usr/local` | 可执行文件与许可证的安装前缀 |
+| `DESTDIR` | （空） | 暂存目录，前置于所有安装路径之前，便于打包 |
+| `UDEV_RULES_DIR` | `/etc/udev/rules.d` | udev 规则的安装目录 |
+
+安装到 `/usr` 前缀、并将 udev 规则放入 `/lib/udev/rules.d`：
+
+```shell
+sudo make install PREFIX=/usr UDEV_RULES_DIR=/lib/udev/rules.d
+```
+
+发行版打包时通常配合 `DESTDIR` 进行暂存安装：
+
+```shell
+make install PREFIX=/usr DESTDIR=$pkgdir UDEV_RULES_DIR=/lib/udev/rules.d
+```
 
 ### Udev 规则（可选）
+
+> `make install` 默认已安装 udev 规则，可通过 `UDEV_RULES_DIR` 变量修改其目录。本节适用于未执行 `make install`、仅手动放置规则的情况。
 
 为避免每次都以 root 权限运行，可将仓库根目录下的 `99-xfel.rules` 拷贝到 udev 规则目录：
 

@@ -26,9 +26,39 @@ make
 sudo make install
 ```
 
-This produces the `xfel` executable; `make install` copies it to the system path (default `/usr/local/bin`).
+This produces the `xfel` executable. `make install` installs the following files:
+
+| File | Default path |
+| --- | --- |
+| `xfel` executable | `/usr/local/bin/xfel` |
+| udev rule `99-xfel.rules` | `/etc/udev/rules.d/99-xfel.rules` |
+| License `LICENSE` | `/usr/local/share/licenses/xfel/LICENSE` |
+
+### Custom install paths
+
+The install paths are controlled by the following variables (all overridable on the command line):
+
+| Variable | Default | Description |
+| --- | --- | --- |
+| `PREFIX` | `/usr/local` | Install prefix for the executable and license |
+| `DESTDIR` | (empty) | Staging directory prepended to all install paths, for packaging |
+| `UDEV_RULES_DIR` | `/etc/udev/rules.d` | Directory for the udev rule |
+
+Install to the `/usr` prefix and place the udev rule under `/lib/udev/rules.d`:
+
+```shell
+sudo make install PREFIX=/usr UDEV_RULES_DIR=/lib/udev/rules.d
+```
+
+Distribution packagers typically combine this with `DESTDIR` for a staged install:
+
+```shell
+make install PREFIX=/usr DESTDIR=$pkgdir UDEV_RULES_DIR=/lib/udev/rules.d
+```
 
 ### Udev rules (optional)
+
+> `make install` already installs the udev rule by default; override its location with the `UDEV_RULES_DIR` variable. This section applies when you skip `make install` and place the rule manually.
 
 To avoid running as root every time, copy `99-xfel.rules` from the repository root to the udev rules directory:
 
