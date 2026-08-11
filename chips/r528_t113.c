@@ -63,7 +63,7 @@ static int chip_detect(struct xfel_ctx_t * ctx, uint32_t id)
 		/*
 		 * Dual-Core ARM Cortex-A7
 		 */
-		if(R32(0x00000000) == 0xea000019)
+		if(R32(ctx, 0x00000000) == 0xea000019)
 			return 1;
 	}
 	return 0;

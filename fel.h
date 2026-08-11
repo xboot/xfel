@@ -58,8 +58,8 @@ enum {
  * that can only support word access. Because the fel protocol can only support
  * byte operation, VERY IMPORTANT !!!
  */
-#define R32(reg)		fel_read32(ctx, reg)
-#define W32(reg, val)	fel_write32(ctx, reg, val)
+#define R32(ctx, reg)		fel_read32(ctx, reg)
+#define W32(ctx, reg, val)	fel_write32(ctx, reg, val)
 
 static inline int fel_chip_detect(struct xfel_ctx_t * ctx, uint32_t id)
 {

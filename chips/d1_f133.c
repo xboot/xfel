@@ -63,7 +63,7 @@ static int chip_detect(struct xfel_ctx_t * ctx, uint32_t id)
 		/*
 		 * XuanTie C906 RISC-V
 		 */
-		if(R32(0x00000000) == 0x43014281)
+		if(R32(ctx, 0x00000000) == 0x43014281)
 			return 1;
 	}
 	return 0;

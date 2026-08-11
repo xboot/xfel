@@ -11,11 +11,11 @@ static int chip_reset(struct xfel_ctx_t * ctx)
 {
 	uint32_t val;
 
-	val = R32(0x01c20ca0 + 0x18);
+	val = R32(ctx, 0x01c20ca0 + 0x18);
 	val &= ~(0xf << 4);
 	val |= (1 << 4) | (0x1 << 0);
-	W32(0x01c20ca0 + 0x18, val);
-	W32(0x01c20ca0 + 0x10, (0xa57 << 1) | (1 << 0));
+	W32(ctx, 0x01c20ca0 + 0x18, val);
+	W32(ctx, 0x01c20ca0 + 0x10, (0xa57 << 1) | (1 << 0));
 	return 1;
 }
 
