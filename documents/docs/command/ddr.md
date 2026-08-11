@@ -12,7 +12,7 @@ xfel ddr [type]
 
 | 参数 | 说明 |
 |------|------|
-| `[type]` | 可选，DDR 配置类型名称。不同芯片支持不同的类型，见[DDR 类型参考](../reference/ddr-types) |
+| `[type]` | 可选，DDR 配置类型名称。不同芯片支持不同的类型，见[DDR参数](../reference/ddr-types) |
 
 ## 说明
 

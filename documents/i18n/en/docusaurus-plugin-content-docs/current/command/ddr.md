@@ -12,7 +12,7 @@ xfel ddr [type]
 
 | Argument | Description |
 |----------|-------------|
-| `[type]` | Optional DDR configuration type name. Different chips support different types, see the [DDR types reference](../reference/ddr-types) |
+| `[type]` | Optional DDR configuration type name. Different chips support different types, see the [DDR parameters](../reference/ddr-types) |
 
 ## Description
 

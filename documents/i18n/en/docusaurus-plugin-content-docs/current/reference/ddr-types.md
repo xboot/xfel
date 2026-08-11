@@ -1,4 +1,4 @@
-# DDR Types Reference
+# DDR Parameters
 
 The table below lists all chips that support DDR initialization. Chips that require a `type` list their supported type names; chips marked as "default config" need no `type`, just run `xfel ddr`. Chips not listed do not support DDR initialization.
 
