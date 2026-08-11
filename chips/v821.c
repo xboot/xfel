@@ -5,9 +5,7 @@
 static int chip_detect(struct xfel_ctx_t * ctx, uint32_t id)
 {
 	if(id == 0x00188200)
-	{
 		return 1;
-	}
 	return 0;
 }
 

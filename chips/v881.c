@@ -45,7 +45,12 @@ static void payload_write32(struct xfel_ctx_t * ctx, uint32_t addr, uint32_t val
 
 static int chip_reset(struct xfel_ctx_t * ctx)
 {
-	payload_write32(ctx, 0x020500a0 + 0x08, (0x16aa << 16) | (0x1 << 0));
+	uint32_t val = payload_read32(ctx, 0x07090000 + 0x2a0);
+	val |= 1 << 1;
+	payload_write32(ctx, 0x07090000 + 0x2a0, val | (0x429b << 16));
+
+	payload_write32(ctx, 0x08009000 + 0x18, (0x16aa << 16) | (0 << 0));
+	payload_write32(ctx, 0x08009000 + 0x18, (0x16aa << 16) | 0x20 | (1 << 0));
 	return 1;
 }
 
