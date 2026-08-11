@@ -24,27 +24,3 @@ xfel extra [...]
 | `exec riscv <address>` | 引导 RISC-V 核并跳转执行 | R128、V821 |
 | `exec dsp <address>` | 引导 DSP 核并跳转执行 | R128 |
 | `checksboot` | 检测安全启动是否启用 | A523/A527/T527、A733 |
-
-## 示例
-
-查看当前芯片支持的扩展命令：
-
-```shell
-xfel extra
-```
-
-转储 efuse 信息：
-
-```shell
-xfel extra efuse dump
-```
-
-引导 ARM64 核到指定地址执行：
-
-```shell
-xfel extra exec arm64 0x4a000000
-```
-
-:::warning
-efuse 写入为一次性或不可逆操作，请务必确认后再执行，错误写入可能导致芯片无法启动。
-:::

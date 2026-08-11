@@ -43,5 +43,4 @@ xfel exec 0x80200000                   # Jump and execute
 ## Next steps
 
 - [Command Reference](../command/version): learn all available commands;
-- [Examples](../examples/f1c100s-uboot): see complete workflows for typical scenarios;
 - [Support List](../reference/support-list): confirm feature support for your chip.

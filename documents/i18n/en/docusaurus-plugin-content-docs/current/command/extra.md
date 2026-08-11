@@ -24,27 +24,3 @@ The `extra` command invokes chip-specific functionality such as efuse access, mu
 | `exec riscv <address>` | Boot the RISC-V core and jump to address | R128, V821 |
 | `exec dsp <address>` | Boot the DSP core and jump to address | R128 |
 | `checksboot` | Check whether secure boot is enabled | A523/A527/T527, A733 |
-
-## Examples
-
-List the extra commands supported by the current chip:
-
-```shell
-xfel extra
-```
-
-Dump efuse information:
-
-```shell
-xfel extra efuse dump
-```
-
-Boot the ARM64 core to a given address:
-
-```shell
-xfel extra exec arm64 0x4a000000
-```
-
-:::warning
-Writing efuse is a one-time or irreversible operation. Make sure before executing; an incorrect write may brick the chip.
-:::

@@ -19,11 +19,3 @@ xfel read <address> <length> <file>
 ## Description
 
 Reads the specified amount of memory and writes it to a local file. A progress bar is shown during transfer, suitable for reading larger blocks of data.
-
-## Example
-
-Read 1 MB from address `0x81700000` to `dump.bin`:
-
-```shell
-xfel read 0x81700000 0x100000 dump.bin
-```

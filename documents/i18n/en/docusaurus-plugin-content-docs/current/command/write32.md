@@ -22,11 +22,3 @@ Writes 4 bytes to the given address, commonly used to configure registers or mod
 :::note
 The FEL protocol only supports byte access; this command is implemented via byte write operations.
 :::
-
-## Example
-
-Write `0x80000000` to address `0x01c20000`:
-
-```shell
-xfel write32 0x01c20000 0x80000000
-```

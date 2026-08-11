@@ -18,11 +18,3 @@ xfel dump <address> <length>
 ## Description
 
 Unlike `hexdump`, `dump` writes raw binary data directly, suitable for piping to a file or another tool via redirection.
-
-## Example
-
-Save memory contents to a file:
-
-```shell
-xfel dump 0x80000000 1024 > memory.bin
-```

@@ -21,15 +21,3 @@ Reads 4 bytes at the given address and prints the value in hex. Useful for query
 :::note
 The FEL protocol only supports byte access; this command is implemented via byte read operations.
 :::
-
-## Example
-
-```shell
-xfel read32 0x01c20000
-```
-
-Sample output:
-
-```
-0x00000000
-```

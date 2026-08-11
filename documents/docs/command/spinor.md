@@ -47,30 +47,3 @@ xfel spinor write <address> <file>
 :::note
 SPI Flash 操作依赖芯片的 SPI 初始化能力，需芯片支持。
 :::
-
-## 示例
-
-探测 SPI NOR Flash：
-
-```shell
-xfel spinor
-```
-
-输出示例：
-
-```
-Found spi nor flash 'W25Q128' with 16777216 bytes
-```
-
-擦除并写入 U-Boot：
-
-```shell
-xfel spinor erase 0x000000 0x80000
-xfel spinor write 0x000000 u-boot.bin
-```
-
-读取 Flash 内容到文件：
-
-```shell
-xfel spinor read 0x000000 0x100000 flash_dump.bin
-```

@@ -18,11 +18,3 @@ xfel dump <address> <length>
 ## 说明
 
 与 `hexdump` 不同，`dump` 直接输出原始二进制数据，便于通过重定向保存到文件或交由其他工具处理。
-
-## 示例
-
-将内存数据保存到文件：
-
-```shell
-xfel dump 0x80000000 1024 > memory.bin
-```

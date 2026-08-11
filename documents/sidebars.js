@@ -30,11 +30,6 @@ const sidebars = {
     'command/spinand',
     'command/extra',
   ],
-  examples: [
-    'examples/f1c100s-uboot',
-    'examples/f1c200s-spinand',
-    'examples/f133-opensbi',
-  ],
   reference: [
     'reference/support-list',
     'reference/ddr-types',

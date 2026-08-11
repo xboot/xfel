@@ -19,11 +19,3 @@ xfel read <address> <length> <file>
 ## 说明
 
 该命令将指定长度的内存数据读取并写入本地文件，传输过程会显示进度条，适合读取较大块的数据。
-
-## 示例
-
-从地址 `0x81700000` 读取 1MB 数据到 `dump.bin`：
-
-```shell
-xfel read 0x81700000 0x100000 dump.bin
-```

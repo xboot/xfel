@@ -11,10 +11,6 @@
     "message": "Commands",
     "description": "Navbar item with label 命令参考"
   },
-  "item.label.使用示例": {
-    "message": "Examples",
-    "description": "Navbar item with label 使用示例"
-  },
   "item.label.参考列表": {
     "message": "Reference",
     "description": "Navbar item with label 参考列表"

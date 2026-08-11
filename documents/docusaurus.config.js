@@ -65,12 +65,6 @@ module.exports = {
           },
           {
             type: 'docSidebar',
-            sidebarId: 'examples',
-            position: 'left',
-            label: '使用示例',
-          },
-          {
-            type: 'docSidebar',
             sidebarId: 'reference',
             position: 'left',
             label: '参考列表',

@@ -43,5 +43,4 @@ xfel exec 0x80200000                   # 跳转执行
 ## 更多操作
 
 - [命令参考](../command/version)：了解所有可用命令；
-- [使用示例](../examples/f1c100s-uboot)：查看典型场景的完整流程；
 - [支持列表](../reference/support-list)：确认芯片功能支持情况。

@@ -18,11 +18,3 @@ xfel hexdump <address> <length>
 ## Description
 
 Reads device memory and prints it with address, hex values and ASCII characters, making it easy to inspect memory contents.
-
-## Example
-
-Dump 256 bytes starting at `0x80000000`:
-
-```shell
-xfel hexdump 0x80000000 256
-```

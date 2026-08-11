@@ -47,30 +47,3 @@ These commands operate on SPI NOR Flash. Run `xfel spinor` first to detect the F
 :::note
 SPI Flash operations depend on the chip's SPI initialization capability.
 :::
-
-## Examples
-
-Detect SPI NOR Flash:
-
-```shell
-xfel spinor
-```
-
-Sample output:
-
-```
-Found spi nor flash 'W25Q128' with 16777216 bytes
-```
-
-Erase and write U-Boot:
-
-```shell
-xfel spinor erase 0x000000 0x80000
-xfel spinor write 0x000000 u-boot.bin
-```
-
-Read Flash contents to a file:
-
-```shell
-xfel spinor read 0x000000 0x100000 flash_dump.bin
-```
