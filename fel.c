@@ -9,11 +9,15 @@ extern struct chip_t a33_r16;
 extern struct chip_t a40i_r40;
 extern struct chip_t a50;
 extern struct chip_t a523_a527_t527;
+extern struct chip_t a537_a333;
 extern struct chip_t a64;
+extern struct chip_t a733;
 extern struct chip_t a80;
 extern struct chip_t a83t;
 extern struct chip_t d1_f133;
+extern struct chip_t f101;
 extern struct chip_t f1c100s_f1c200s_f1c500s;
+extern struct chip_t h135;
 extern struct chip_t h2_h3;
 extern struct chip_t h5;
 extern struct chip_t h6;
@@ -28,12 +32,8 @@ extern struct chip_t v536;
 extern struct chip_t v831;
 extern struct chip_t v851_v853;
 extern struct chip_t v821;
-extern struct chip_t a733;
 extern struct chip_t t536;
-extern struct chip_t a537_a333;
-extern struct chip_t h135;
 extern struct chip_t t153;
-
 
 static struct chip_t * chips[] = {
 	&a10,
@@ -45,11 +45,15 @@ static struct chip_t * chips[] = {
 	&a40i_r40,
 	&a50,
 	&a523_a527_t527,
+	&a537_a333,
 	&a64,
+	&a733,
 	&a80,
 	&a83t,
 	&d1_f133,
+	&f101,
 	&f1c100s_f1c200s_f1c500s,
+	&h135,
 	&h2_h3,
 	&h5,
 	&h6,
@@ -64,10 +68,7 @@ static struct chip_t * chips[] = {
 	&v831,
 	&v851_v853,
 	&v821,
-	&a733,
 	&t536,
-	&a537_a333,
-	&h135,
 	&t153,
 };
 

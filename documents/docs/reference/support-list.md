@@ -21,6 +21,7 @@
 | A83T | Octa-core Cortex-A7 @ 1.6GHz | 0x00167300 | ✅ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ |
 | D1 | XuanTie C906 RISC-V | 0x00185900 | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
 | D1s | XuanTie C906 RISC-V | 0x00185900 | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
+| F101 | XuanTie C907 RISC-V | 0x00193700 | ✅ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ |
 | F133 | XuanTie C906 RISC-V | 0x00185900 | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
 | F1C100S | Single-core ARM9 | 0x00166300 | ✅ | ✅ | 🚫 | ✅ | ✅ | ✅ | ✅ |
 | F1C200S | Single-core ARM9 | 0x00166300 | ✅ | ✅ | 🚫 | ✅ | ✅ | ✅ | ✅ |
