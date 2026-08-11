@@ -41,7 +41,7 @@ usage:
 ## Links
 
 * [The chinese discussion posts](https://whycan.com/t_6546.html)
-* [The linux-sunxi community](http://sunxi.org/)
+* [The linux-sunxi community](https://linux-sunxi.org)
 
 ## License
 

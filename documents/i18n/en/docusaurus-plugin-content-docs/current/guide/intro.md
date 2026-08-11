@@ -32,4 +32,4 @@ XFEL supports dozens of Allwinner SOCs. See the [Support List](../reference/supp
 - Source repository: [https://github.com/xboot/xfel](https://github.com/xboot/xfel)
 - Releases: [https://github.com/xboot/xfel/releases](https://github.com/xboot/xfel/releases)
 - Discussion thread (Chinese): [https://whycan.com/t_6546.html](https://whycan.com/t_6546.html)
-- Linux-Sunxi community: [http://sunxi.org/](http://sunxi.org/)
+- Linux-Sunxi community: [https://linux-sunxi.org](https://linux-sunxi.org)

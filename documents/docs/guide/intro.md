@@ -32,4 +32,4 @@ XFEL 支持数十款全志 SOC，详细的芯片型号与功能支持情况见[�
 - 源码仓库：[https://github.com/xboot/xfel](https://github.com/xboot/xfel)
 - 发布版本：[https://github.com/xboot/xfel/releases](https://github.com/xboot/xfel/releases)
 - 中文讨论帖：[https://whycan.com/t_6546.html](https://whycan.com/t_6546.html)
-- Linux-Sunxi 社区：[http://sunxi.org/](http://sunxi.org/)
+- Linux-Sunxi 社区：[https://linux-sunxi.org](https://linux-sunxi.org)
