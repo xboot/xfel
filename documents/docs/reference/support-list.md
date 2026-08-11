@@ -32,6 +32,7 @@
 | H313 | Quad-Core ARM Cortex-A53 | 0x00182300 | ✓ | ✗ | ✗ | ✗ | ✓ | ✗ | ✗ |
 | H616 | Quad-Core ARM Cortex-A53 | 0x00182300 | ✓ | ✗ | ✗ | ✗ | ✓ | ✗ | ✗ |
 | H618 | Quad-Core ARM Cortex-A53 | 0x00182300 | ✓ | ✗ | ✗ | ✗ | ✓ | ✗ | ✗ |
+| H716 | Quad-Core ARM Cortex-A53 | 0x00186000 | ✓ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ |
 | MR527 | Octa-core Cortex-A55 2.0Ghz + E906 RISC-V + HIFI4 DSP | 0x00189000 | ✓ | ✓ | ✓ | ✗ | ✓ | ✗ | ✗ |
 | R8 | ARM Cortex-A8 @ 1Ghz | 0x00162500 | ✓ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ |
 | R16 | Quad-Core ARM Cortex-A7 @ 1.2GHz | 0x00166700 | ✓ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ |
