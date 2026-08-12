@@ -1,12 +1,8 @@
-
-
-***
 # XFEL
-Tiny FEL tools for allwinner SOC.
+Tiny FEL tools for Allwinner SOC.
 
-[Documentation](https://xfel.xboot.org) &mdash;
-[Support Lists](https://xfel.xboot.org/reference/support-list) &mdash;
-[Examples](https://xfel.xboot.org/examples/f1c100s-uboot) &mdash;
+[Documentation](https://xfel.xboot.org/) &mdash;
+[Support Lists](https://xfel.xboot.org/reference/support-list/) &mdash;
 [Releases](https://github.com/xboot/xfel/releases/)
 
 ## Usage
@@ -40,10 +36,10 @@ usage:
 
 ## Links
 
-* [The chinese discussion posts](https://whycan.com/t_6546.html)
+* [Chinese discussion](https://whycan.com/t_6546.html)
 * [The linux-sunxi community](https://linux-sunxi.org)
 
 ## License
 
-This library is free software; you can redistribute it and or modify it under the terms of the MIT license. See [MIT License](LICENSE) for details.
+This program is free software; you can redistribute it and/or modify it under the terms of the MIT license. See [MIT License](LICENSE) for details.
 
