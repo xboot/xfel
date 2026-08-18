@@ -1,5 +1,5 @@
-#ifndef __RISCV64_ENDIAN_H__
-#define __RISCV64_ENDIAN_H__
+#ifndef __RISCV32_ENDIAN_H__
+#define __RISCV32_ENDIAN_H__
 
 #ifdef __cplusplus
 extern "C" {
@@ -24,4 +24,4 @@ extern "C" {
 }
 #endif
 
-#endif /* __RISCV64_ENDIAN_H__ */
+#endif /* __RISCV32_ENDIAN_H__ */
