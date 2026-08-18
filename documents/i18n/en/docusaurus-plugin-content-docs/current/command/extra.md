@@ -16,7 +16,7 @@ The `extra` command invokes chip-specific functionality such as efuse access, mu
 
 | Subcommand | Description | Supported chips (partial) |
 |------------|-------------|---------------------------|
-| `efuse dump` | Dump all efuse information | D1/F133, R528/T113, V821, V851/V853, A523/A527/T527, T153, R128, V3s/S3, A40i/R40 |
+| `efuse dump` | Dump all efuse information | D1/F133, R528/T113, V821, V851/V853, A523/A527/T527, T153, R128, V3s/S3, A40i/R40, F101 |
 | `efuse read32 <offset>` | Read a 32-bit value from efuse | same as above |
 | `efuse write32 <offset> <value>` | Write a 32-bit value to efuse | same as above |
 | `efuse write <offset> <file>` | Write a file to efuse | same as above |

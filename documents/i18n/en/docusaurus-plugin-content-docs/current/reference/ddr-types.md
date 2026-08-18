@@ -15,5 +15,6 @@ The table below lists all chips that support DDR initialization. Chips that requ
 | A40i / R40 | `ddr3`, `lpddr3` |
 | A523 / A527 / T527 / MR527 | `lpddr4` |
 | F1C100S / F1C200S / F1C500S | Default config (no type needed) |
+| F101 | `f101-s2`, `f101-s3` |
 | V821 | Default config (no type needed) |
 | V831 | Default config (no type needed) |

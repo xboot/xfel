@@ -16,7 +16,7 @@ xfel extra [...]
 
 | 子命令 | 说明 | 支持芯片（部分） |
 |--------|------|------------------|
-| `efuse dump` | 转储全部 efuse 信息 | D1/F133、R528/T113、V821、V851/V853、A523/A527/T527、T153、R128、V3s/S3、A40i/R40 等 |
+| `efuse dump` | 转储全部 efuse 信息 | D1/F133、R528/T113、V821、V851/V853、A523/A527/T527、T153、R128、V3s/S3、A40i/R40、F101 等 |
 | `efuse read32 <offset>` | 读取 efuse 的 32 位值 | 同上 |
 | `efuse write32 <offset> <value>` | 写入 efuse 的 32 位值 | 同上 |
 | `efuse write <offset> <file>` | 将文件写入 efuse | 同上 |

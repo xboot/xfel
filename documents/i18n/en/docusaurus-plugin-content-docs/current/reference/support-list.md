@@ -24,7 +24,7 @@ Legend: ✓ = Supported, ✗ = Not supported yet, - = None
 | F1C100S | Single-core ARM9 | 0x00166300 | ✓ | ✓ | - | ✓ | ✓ | ✓ | ✓ |
 | F1C200S | Single-core ARM9 | 0x00166300 | ✓ | ✓ | - | ✓ | ✓ | ✓ | ✓ |
 | F1C500S | Single-core ARM9 | 0x00166300 | ✓ | ✓ | - | ✓ | ✓ | ✓ | ✓ |
-| F101 | XuanTie C907 RISC-V | 0x00193700 | ✓ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ |
+| F101 | XuanTie C907 RISC-V | 0x00193700 | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ |
 | F133 | XuanTie C906 RISC-V | 0x00185900 | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ |
 | H2 | Quad-Core ARM Cortex-A7 | 0x00168000 | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ |
 | H3 | Quad-Core ARM Cortex-A7 @ 1.296GHz | 0x00168000 | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ |
