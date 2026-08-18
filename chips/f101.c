@@ -43,6 +43,48 @@ static void payload_write32(struct xfel_ctx_t * ctx, uint32_t addr, uint32_t val
 	fel_exec(ctx, ctx->version.scratchpad);
 }
 
+enum {
+	SID_PRCTL		= 0x03006000 + 0x00,
+	SID_PR_ADDR		= 0x03006000 + 0x04,
+	SID_PRKEY		= 0x03006000 + 0x08,
+	SID_RDKEY		= 0x03006000 + 0x0C,
+	EFUSE_HV_SWITCH	= 0x03090000 + 0x204,
+};
+
+static uint32_t efuse_read(struct xfel_ctx_t * ctx, uint32_t offset)
+{
+	uint32_t val;
+
+	payload_write32(ctx, SID_PR_ADDR, offset / 4);
+	val = payload_read32(ctx, SID_PRCTL);
+	val &= ~((0xffff << 16) | 0x3);
+	val |= (0xadbf << 16) | 0x2;
+	payload_write32(ctx, SID_PRCTL, val);
+	while(payload_read32(ctx, SID_PRCTL) & 0x2);
+	val &= ~((0xffff << 16) | 0x3);
+	payload_write32(ctx, SID_PRCTL, val);
+	val = payload_read32(ctx, SID_RDKEY);
+
+	return val;
+}
+
+static void efuse_write(struct xfel_ctx_t * ctx, uint32_t offset, uint32_t value)
+{
+	uint32_t val;
+
+	payload_write32(ctx, EFUSE_HV_SWITCH, 0x1);
+	payload_write32(ctx, SID_PRKEY, value);
+	payload_write32(ctx, SID_PR_ADDR, offset / 4);
+	val = payload_read32(ctx, SID_PRCTL);
+	val &= ~((0xffff << 16) | 0x3);
+	val |= (0xe0c9 << 16) | 0x1;
+	payload_write32(ctx, SID_PRCTL, val);
+	while(payload_read32(ctx, SID_PRCTL) & 0x1);
+	val &= ~((0xffff << 16) | 0x3);
+	payload_write32(ctx, SID_PRCTL, val);
+	payload_write32(ctx, EFUSE_HV_SWITCH, 0x0);
+}
+
 static int chip_reset(struct xfel_ctx_t * ctx)
 {
 	payload_write32(ctx, 0x020500a0 + 0x08, (0x16aa << 16) | (0x1 << 0));
@@ -53,10 +95,10 @@ static int chip_sid(struct xfel_ctx_t * ctx, char * sid)
 {
 	uint32_t id[4];
 
-	id[0] = payload_read32(ctx, 0x03006200 + 0x0);
-	id[1] = payload_read32(ctx, 0x03006200 + 0x4);
-	id[2] = payload_read32(ctx, 0x03006200 + 0x8);
-	id[3] = payload_read32(ctx, 0x03006200 + 0xc);
+	id[0] = efuse_read(ctx, 0x0);
+	id[1] = efuse_read(ctx, 0x4);
+	id[2] = efuse_read(ctx, 0x8);
+	id[3] = efuse_read(ctx, 0xc);
 	sprintf(sid, "%08x%08x%08x%08x", id[0], id[1], id[2], id[3]);
 	return 1;
 }
@@ -104,48 +146,6 @@ static int chip_spi_init(struct xfel_ctx_t * ctx, uint32_t * swapbuf, uint32_t *
 static int chip_spi_run(struct xfel_ctx_t * ctx, uint8_t * cbuf, uint32_t clen)
 {
 	return 0;
-}
-
-enum {
-	SID_PRCTL		= 0x03006000 + 0x00,
-	SID_PR_ADDR		= 0x03006000 + 0x04,
-	SID_PRKEY		= 0x03006000 + 0x08,
-	SID_RDKEY		= 0x03006000 + 0x0C,
-	EFUSE_HV_SWITCH	= 0x03090000 + 0x204,
-};
-
-static uint32_t efuse_read(struct xfel_ctx_t * ctx, uint32_t offset)
-{
-	uint32_t val;
-
-	payload_write32(ctx, SID_PR_ADDR, offset / 4);
-	val = payload_read32(ctx, SID_PRCTL);
-	val &= ~((0xffff << 16) | 0x3);
-	val |= (0xadbf << 16) | 0x2;
-	payload_write32(ctx, SID_PRCTL, val);
-	while(payload_read32(ctx, SID_PRCTL) & 0x2);
-	val &= ~((0xffff << 16) | 0x3);
-	payload_write32(ctx, SID_PRCTL, val);
-	val = payload_read32(ctx, SID_RDKEY);
-
-	return val;
-}
-
-static void efuse_write(struct xfel_ctx_t * ctx, uint32_t offset, uint32_t value)
-{
-	uint32_t val;
-
-	payload_write32(ctx, EFUSE_HV_SWITCH, 0x1);
-	payload_write32(ctx, SID_PRKEY, value);
-	payload_write32(ctx, SID_PR_ADDR, offset / 4);
-	val = payload_read32(ctx, SID_PRCTL);
-	val &= ~((0xffff << 16) | 0x3);
-	val |= (0xe0c9 << 16) | 0x1;
-	payload_write32(ctx, SID_PRCTL, val);
-	while(payload_read32(ctx, SID_PRCTL) & 0x1);
-	val &= ~((0xffff << 16) | 0x3);
-	payload_write32(ctx, SID_PRCTL, val);
-	payload_write32(ctx, EFUSE_HV_SWITCH, 0x0);
 }
 
 static const struct sid_section_t {
