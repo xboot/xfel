@@ -14,10 +14,10 @@ static void usage(void)
 	printf("    QQ: 8192542\r\n");
 	printf("usage:\r\n");
 	printf("    xfel version                                        - Show chip version\r\n");
-	printf("    xfel hexdump <address> <length>                     - Dumps memory region in hex\r\n");
-	printf("    xfel dump <address> <length>                        - Binary memory dump to stdout\r\n");
-	printf("    xfel read32 <address>                               - Read 32-bits value from device memory\r\n");
-	printf("    xfel write32 <address> <value>                      - Write 32-bits value to device memory\r\n");
+	printf("    xfel hexdump <address> <length>                     - Dumps memory region in hex (payload)\r\n");
+	printf("    xfel dump <address> <length>                        - Binary memory dump to stdout (payload)\r\n");
+	printf("    xfel read32 <address>                               - Read 32-bits value from device memory (payload)\r\n");
+	printf("    xfel write32 <address> <value>                      - Write 32-bits value to device memory (payload)\r\n");
 	printf("    xfel read <address> <length> <file>                 - Read memory to file\r\n");
 	printf("    xfel write <address> <file>                         - Write file to memory\r\n");
 	printf("    xfel exec <address>                                 - Call function address\r\n");
@@ -36,6 +36,22 @@ static void usage(void)
 	printf("    xfel spinand write <address> <file>                 - Write file to spi nand flash\r\n");
 	printf("    xfel spinand splwrite <split-size> <address> <file> - Write file to spi nand flash with split support\r\n");
 	printf("    xfel extra [...]                                    - The extra commands\r\n");
+}
+
+static void fel_chip_read_buf(struct xfel_ctx_t * ctx, uint32_t addr, char * buf, size_t len)
+{
+	uint32_t start = addr & ~0x3;
+	uint32_t end = (addr + len + 0x3) & ~0x3;
+	for(uint32_t p = start; p < end; p += 4)
+	{
+		uint32_t val;
+		if(!fel_chip_read32(ctx, p, &val))
+			break;
+		uint32_t s = (p > addr) ? p : addr;
+		uint32_t e = (p + 4 < addr + len) ? p + 4 : addr + len;
+		for(uint32_t q = s; q < e; q++)
+			buf[q - addr] = (val >> ((q - p) * 8)) & 0xff;
+	}
 }
 
 int main(int argc, char * argv[])
@@ -99,7 +115,7 @@ int main(int argc, char * argv[])
 			char * buf = malloc(len);
 			if(buf)
 			{
-				fel_read(&ctx, addr, buf, len);
+				fel_chip_read_buf(&ctx, addr, buf, len);
 				hexdump(addr, buf, len);
 				free(buf);
 			}
@@ -118,7 +134,7 @@ int main(int argc, char * argv[])
 			char * buf = malloc(len);
 			if(buf)
 			{
-				fel_read(&ctx, addr, buf, len);
+				fel_chip_read_buf(&ctx, addr, buf, len);
 				fwrite(buf, len, 1, stdout);
 				free(buf);
 			}
@@ -133,7 +149,9 @@ int main(int argc, char * argv[])
 		if(argc == 1)
 		{
 			uint32_t addr = strtoul(argv[0], NULL, 0);
-			printf("0x%08x\r\n", fel_read32(&ctx, addr));
+			uint32_t val = 0;
+			fel_chip_read32(&ctx, addr, &val);
+			printf("0x%08x\r\n", val);
 		}
 		else
 			usage();
@@ -146,7 +164,7 @@ int main(int argc, char * argv[])
 		{
 			uint32_t addr = strtoul(argv[0], NULL, 0);
 			uint32_t val = strtoul(argv[1], NULL, 0);
-			fel_write32(&ctx, addr, val);
+			fel_chip_write32(&ctx, addr, val);
 		}
 		else
 			usage();
