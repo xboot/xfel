@@ -7,6 +7,18 @@ static int chip_detect(struct xfel_ctx_t * ctx, uint32_t id)
 	return 0;
 }
 
+static int chip_read32(struct xfel_ctx_t * ctx, uint32_t addr, uint32_t * val)
+{
+	*val = fel_read32(ctx, addr);
+	return 1;
+}
+
+static int chip_write32(struct xfel_ctx_t * ctx, uint32_t addr, uint32_t val)
+{
+	fel_write32(ctx, addr, val);
+	return 1;
+}
+
 static int chip_reset(struct xfel_ctx_t * ctx)
 {
 	return 0;
@@ -45,6 +57,8 @@ static int chip_extra(struct xfel_ctx_t * ctx, int argc, char * argv[])
 struct chip_t a63 = {
 	.name = "A63",
 	.detect = chip_detect,
+	.read32 = chip_read32,
+	.write32 = chip_write32,
 	.reset = chip_reset,
 	.sid = chip_sid,
 	.jtag = chip_jtag,

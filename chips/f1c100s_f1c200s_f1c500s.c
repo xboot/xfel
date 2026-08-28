@@ -7,6 +7,18 @@ static int chip_detect(struct xfel_ctx_t * ctx, uint32_t id)
 	return 0;
 }
 
+static int chip_read32(struct xfel_ctx_t * ctx, uint32_t addr, uint32_t * val)
+{
+	*val = fel_read32(ctx, addr);
+	return 1;
+}
+
+static int chip_write32(struct xfel_ctx_t * ctx, uint32_t addr, uint32_t val)
+{
+	fel_write32(ctx, addr, val);
+	return 1;
+}
+
 static int chip_reset(struct xfel_ctx_t * ctx)
 {
 	uint32_t val;
@@ -550,6 +562,8 @@ static int chip_extra(struct xfel_ctx_t * ctx, int argc, char * argv[])
 struct chip_t f1c100s_f1c200s_f1c500s = {
 	.name = "F1C100S/F1C200S/F1C500S",
 	.detect = chip_detect,
+	.read32 = chip_read32,
+	.write32 = chip_write32,
 	.reset = chip_reset,
 	.sid = chip_sid,
 	.jtag = chip_jtag,

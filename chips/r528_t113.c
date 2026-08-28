@@ -105,6 +105,18 @@ static void payload_write32(struct xfel_ctx_t * ctx, uint32_t addr, uint32_t val
 	fel_exec(ctx, ctx->version.scratchpad);
 }
 
+static int chip_read32(struct xfel_ctx_t * ctx, uint32_t addr, uint32_t * val)
+{
+	*val = fel_read32(ctx, addr);
+	return 1;
+}
+
+static int chip_write32(struct xfel_ctx_t * ctx, uint32_t addr, uint32_t val)
+{
+	fel_write32(ctx, addr, val);
+	return 1;
+}
+
 static int chip_reset(struct xfel_ctx_t * ctx)
 {
 	payload_write32(ctx, 0x020500a0 + 0x08, (0x16aa << 16) | (0x1 << 0));
@@ -4600,6 +4612,8 @@ static int chip_extra(struct xfel_ctx_t * ctx, int argc, char * argv[])
 struct chip_t r528_t113 = {
 	.name = "R528/T113",
 	.detect = chip_detect,
+	.read32 = chip_read32,
+	.write32 = chip_write32,
 	.reset = chip_reset,
 	.sid = chip_sid,
 	.jtag = chip_jtag,

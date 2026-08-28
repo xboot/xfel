@@ -32,6 +32,8 @@ struct xfel_ctx_t {
 struct chip_t {
 	char * name;
 	int (*detect)(struct xfel_ctx_t * ctx, uint32_t id);
+	int (*read32)(struct xfel_ctx_t * ctx, uint32_t addr, uint32_t * val);
+	int (*write32)(struct xfel_ctx_t * ctx, uint32_t addr, uint32_t val);
 	int (*reset)(struct xfel_ctx_t * ctx);
 	int (*sid)(struct xfel_ctx_t * ctx, char * sid);
 	int (*jtag)(struct xfel_ctx_t * ctx);
@@ -65,6 +67,20 @@ static inline int fel_chip_detect(struct xfel_ctx_t * ctx, uint32_t id)
 {
 	if(ctx->chip->detect)
 		return ctx->chip->detect(ctx, id);
+	return 0;
+}
+
+static inline int fel_chip_read32(struct xfel_ctx_t * ctx, uint32_t addr, uint32_t * val)
+{
+	if(ctx->chip->read32)
+		return ctx->chip->read32(ctx, addr, val);
+	return 0;
+}
+
+static inline int fel_chip_write32(struct xfel_ctx_t * ctx, uint32_t addr, uint32_t val)
+{
+	if(ctx->chip->write32)
+		return ctx->chip->write32(ctx, addr, val);
 	return 0;
 }
 
