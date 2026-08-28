@@ -83,13 +83,13 @@ static void payload_write32(struct xfel_ctx_t * ctx, uint32_t addr, uint32_t val
 
 static int chip_read32(struct xfel_ctx_t * ctx, uint32_t addr, uint32_t * val)
 {
-	*val = fel_read32(ctx, addr);
+	*val = payload_read32(ctx, addr);
 	return 1;
 }
 
 static int chip_write32(struct xfel_ctx_t * ctx, uint32_t addr, uint32_t val)
 {
-	fel_write32(ctx, addr, val);
+	payload_write32(ctx, addr, val);
 	return 1;
 }
 
