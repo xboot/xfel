@@ -1,5 +1,12 @@
 #include <fel.h>
 
+#define V881_SPI_PAYLOAD_ADDR	0x00100000
+#define V881_SPI_COMMAND_ADDR	0x00101000
+#define V881_SPI_STATUS_ADDR	0x00101ffc
+#define V881_SPI_SWAP_ADDR	0x00102000
+#define V881_SPI_SWAP_SIZE	65536
+#define V881_SPI_COMMAND_SIZE	256
+
 static int chip_detect(struct xfel_ctx_t * ctx, uint32_t id)
 {
 	if(id == 0x00191800)
@@ -90,12 +97,41 @@ static int chip_ddr(struct xfel_ctx_t * ctx, const char * type)
 
 static int chip_spi_init(struct xfel_ctx_t * ctx, uint32_t * swapbuf, uint32_t * swaplen, uint32_t * cmdlen)
 {
-	return 0;
+	static const uint8_t payload[] = {
+#include "v881-spi.inc"
+	};
+
+	fel_write(ctx, V881_SPI_PAYLOAD_ADDR, (void *)payload, sizeof(payload));
+	if(swapbuf)
+		*swapbuf = V881_SPI_SWAP_ADDR;
+	if(swaplen)
+		*swaplen = V881_SPI_SWAP_SIZE;
+	if(cmdlen)
+		*cmdlen = V881_SPI_COMMAND_SIZE;
+	return 1;
 }
 
 static int chip_spi_run(struct xfel_ctx_t * ctx, uint8_t * cbuf, uint32_t clen)
 {
-	return 0;
+	uint32_t status = cpu_to_le32(-1);
+
+	if(clen > V881_SPI_COMMAND_SIZE)
+		return 0;
+	fel_write(ctx, V881_SPI_COMMAND_ADDR, cbuf, clen);
+	fel_write(ctx, V881_SPI_STATUS_ADDR, &status, sizeof(status));
+	fel_exec(ctx, V881_SPI_PAYLOAD_ADDR);
+	fel_read(ctx, V881_SPI_STATUS_ADDR, &status, sizeof(status));
+	if(le32_to_cpu(status) != 0)
+	{
+		uint32_t regs[4];
+
+		fel_read(ctx, 0x00101f80, regs, sizeof(regs));
+		fprintf(stderr, "V881 SPIF error %d: ver=%08x gcr=%08x "
+			"gar=%08x irq=%08x\n", (int32_t)le32_to_cpu(status),
+			le32_to_cpu(regs[0]), le32_to_cpu(regs[1]),
+			le32_to_cpu(regs[2]), le32_to_cpu(regs[3]));
+	}
+	return le32_to_cpu(status) == 0;
 }
 
 static int chip_extra(struct xfel_ctx_t * ctx, int argc, char * argv[])
