@@ -8,9 +8,12 @@ FEL is a low-level subroutine contained in the BootROM of Allwinner SOCs. Once a
 
 To enter FEL mode:
 
-1. Hold the board's FEL / BOOT button;
-2. Reset or power on the board;
-3. Connect the device to the host via USB (USB ID `1f3a:efe8`).
+1. Hold the board's FEL / BOOT button while resetting or powering on the board;
+2. Run a FEL-mode command from a running system, for example `efex` in U-Boot, `reboot efex` in Linux, or `fel` in xstar;
+3. Erase the boot storage (SPI NOR/NAND flash, eMMC, etc.) so the BootROM finds no valid boot medium and falls back to FEL mode;
+4. Insert a special FEL-mode TF boot card.
+
+Once the chip is in FEL mode, the host can connect to it via USB (USB ID `1f3a:efe8`).
 
 ## Features
 

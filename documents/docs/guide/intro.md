@@ -8,9 +8,12 @@ FEL 是全志 SOC BootROM 中内置的一段低级子程序。当芯片进入 FE
 
 进入 FEL 模式的一般方法：
 
-1. 按住板载的 FEL / BOOT 按键；
-2. 复位或上电开发板；
-3. 主机通过 USB 连接设备（USB ID 为 `1f3a:efe8`）。
+1. 按住板载的 FEL / BOOT 按键，复位或上电开发板；
+2. 在已运行的系统中执行进入 FEL 模式的命令，例如 U-Boot 中的 `efex`、Linux 中的 `reboot efex`、xstar 中的 `fel`；
+3. 清空启动存储介质（SPI NOR/NAND Flash、eMMC 等），BootROM 找不到有效启动介质时自动回退到 FEL 模式；
+4. 插入特制的 TF FEL 模式引导卡。
+
+进入 FEL 模式后，主机即可通过 USB 连接设备（USB ID 为 `1f3a:efe8`）。
 
 ## 特性
 
