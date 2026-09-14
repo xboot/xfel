@@ -7,7 +7,7 @@
 
 static void usage(void)
 {
-	printf("xfel(v1.3.6) - https://xfel.xboot.org\r\n");
+	printf("xfel(v1.4.0) - https://xfel.xboot.org\r\n");
 	printf("copyright:\r\n");
 	printf("    Copyright(c) Jianjun Jiang <8192542@qq.com>\r\n");
 	printf("    Mobile phone: +86-18665388956\r\n");
